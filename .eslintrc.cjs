@@ -31,5 +31,9 @@ module.exports = {
     ],
     "rules": {
         'vue/html-indent': ['error', 2],
+        'vue/multi-word-component-names': 'off',
+        'no-unused-vars': 1,
+        'no-console': 1,
+        'no-undef': 0,
     }
 }
