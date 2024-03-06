@@ -1,19 +1,20 @@
 <template>
   <div class="card-body">
-    <div class="flex justify-between">
-      <div>
-        <h2 class="card-title">Heróis</h2>
-        <span class="text-sm m-0">Todos os heróis</span>
-      </div>
-      <nuxt-link
-        to="/heroes/new"
-        class="btn btn-sm btn-primary"
-      >
-        <i class="fa fa-plus" />
-        Novo
-      </nuxt-link>
-    </div>
-    <div class="divider m-0" />
+    <page-header
+      title="Heróis"
+      subtitle="Todos os herois"
+      redirect-back="/home"
+    >
+      <template #end>
+        <nuxt-link
+          to="heroes/new"
+          class="btn btn-sm btn-primary"
+        >
+          <i class="fa fa-plus" />
+          Novo
+        </nuxt-link>
+      </template>
+    </page-header>
 
     <div class="flex flex-col py-2">
       <div>
@@ -36,9 +37,10 @@
 <script lang="ts">
 import CardHeroItem from "~/components/Home/CardHeroItem.vue";
 import type {Person} from "~/types";
+import PageHeader from "~/components/layout/PageHeader.vue";
 
 export default {
-  components: {CardHeroItem},
+  components: {PageHeader, CardHeroItem},
   data() {
     return {
       heroes: <Person[]>([]),
@@ -58,6 +60,7 @@ export default {
         'Content-Type': 'Application/json',
         per_page: 15
       }).then((response) => {
+        console.log(response.data._value);
         if (response.status)
           this.heroes = response.data._value
       }).catch((error) => console.log(error))

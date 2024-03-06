@@ -8,21 +8,30 @@
       />
     </figure>
     <div class="card-body items-stretch overflow-clip">
-      <h2 class="card-title uppercase">{{ hero.codename }}</h2>
-      <ul class="text-wrap">
-        <li>
-          <span class="font-bold uppercase">{{ hero.name }}</span>
-        </li>
-        <li>
-          <span>{{ hero.age }} Anos</span>
-        </li>
-        <li>
-          Planeta original:
-          <span class="font-bold">{{ hero.planet }}</span>
-        </li>
-      </ul>
-      <div class="card-actions justify-end">
-        <button class="btn btn-primary">Acessar</button>
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="card-title uppercase">{{ hero.codename }}</h2>
+          <ul class="text-wrap">
+            <li>
+              <span class="font-bold uppercase">{{ hero.name }}</span>
+            </li>
+            <li>
+              <span>{{ hero.age }} Anos</span>
+            </li>
+            <li>
+              Planeta original:
+              <span class="font-bold">{{ hero.planet }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="">
+          <nuxt-link
+            :to="`heroes/${hero.id}`"
+            class="btn btn-ghost"
+          >
+            <i class="fa fa-share" />
+          </nuxt-link>
+        </div>
       </div>
     </div>
   </div>
