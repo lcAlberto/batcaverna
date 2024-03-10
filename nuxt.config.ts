@@ -12,8 +12,18 @@ export default defineNuxtConfig({
           ]
       }
   },
+  runtimeConfig: {
+      // apiSecret: '',
+      public: {
+          apiSecret: '',
+          apiBase: ''
+      }
+    },
   modules: [
       '@nuxtjs/eslint-module',
       '@nuxtjs/tailwindcss',
   ],
+    plugins: [
+        // '~/plugins/apiClient.ts',
+    ],
 })

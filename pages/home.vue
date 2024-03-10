@@ -12,7 +12,6 @@
   </div>
 </template>
 <script lang="ts">
-import type {Person} from "~/types";
 export default {
 //
 }

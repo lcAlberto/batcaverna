@@ -10,7 +10,7 @@ const translations: TranslationItem[] = [
     {'edit': 'Editar'},
 ];
 export function translate(field: string): string {
-    const translation = translations.find(item => item.hasOwnProperty(field));
+    const translation = translations.find(item => Object.prototype.hasOwnProperty.call(item, field));
 
     return translation ? translation[field] : field;
 }

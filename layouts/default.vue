@@ -34,7 +34,6 @@ import Breadcrumb from "~/components/layout/Breadcrumb.vue";
 import BreadcrumbDefault from "~/components/layout/Breadcrumb-default.vue";
 
 let sidebarOpen = ref(true)
-const router = useRouter()
 
 </script>
 

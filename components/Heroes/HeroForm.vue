@@ -1,18 +1,18 @@
 <template>
-  <div class="flex flex-col justify-center py-2">
+  <div class="flex flex-col items-center justify-center py-2 gap-4">
     <div class="flex items-center justify-center gap-5 py-3 my-5">
       <avatar-upload
         :current-image="formData.avatar"
-        class="w-1/2 justify-end"
+        class="w-min justify-end"
         @update="(event) => formData.avatar = event"
       />
-      <div class="w-1/2">
+      <div class="">
         <label class="form-control w-full">
           <input
             v-model="formData.codename"
             type="text"
             placeholder="Codinome"
-            class="input w-full"
+            class="input w-full input-sm lg:input-bordered"
           />
           <div class="label">
             <span v-show="errors"  class="label-text-alt">Bottom Left label</span>
@@ -23,7 +23,7 @@
             v-model="formData.name"
             type="text"
             placeholder="Nome"
-            class="input w-full"
+            class="input w-full input-sm lg:input-bordered"
           />
           <div class="label">
             <span v-show="errors"  class="label-text-alt">Bottom Left label</span>
@@ -32,9 +32,9 @@
         <label class="form-control mb-0">
           <input
             v-model="formData.age"
-            type="text"
+            type="number"
             placeholder="Idade"
-            class="input input-sm w-full"
+            class="input input-sm w-full lg:input-bordered"
           />
           <div class="label">
             <span v-show="errors"  class="label-text-alt">Bottom Left label</span>
@@ -42,7 +42,7 @@
         </label>
       </div>
     </div>
-    <div class="mx-auto lg:w-1/2">
+    <div class="mx-auto lg:w-2/3">
       <div class="flex gap-4">
         <label class="form-control w-full">
           <input
@@ -94,7 +94,7 @@
       <div class="flex gap-4">
         <label class="form-control w-full">
           <input
-            v-model="formData['main-color']"
+            v-model="formData.mainColor"
             type="text"
             placeholder="Principal cor"
             class="input input-sm input-bordered w-full"
@@ -103,22 +103,51 @@
             <span v-show="errors"  class="label-text-alt">Bottom Left label</span>
           </div>
         </label>
-        <label class="form-control w-full">
-          <input
-            v-model="formData.sex"
-            type="text"
-            placeholder="Sexo"
-            class="input input-sm input-bordered w-full"
-          />
+      </div>
+      <div class="flex gap-4">
+        <div class="form-control flex flex-row gap-4 justify-center pb-2 w-full">
+          <label class="label cursor-pointer">Sexo:</label>
+          <div class="flex flex-row gap-4">
+            <label class="label justify-start gap-3 cursor-pointer">
+              <span class="label-text">Masculino</span>
+              <input
+                v-model="formData.sex"
+                type="radio"
+                name="sex"
+                value="male"
+                class="radio radio-sm checked:bg-primary"
+              />
+            </label>
+            <label class="label justify-start gap-3 cursor-pointer">
+              <span class="label-text">Feminino</span>
+              <input
+                v-model="formData.sex"
+                type="radio"
+                value="female"
+                name="sex"
+                class="radio radio-sm checked:bg-primary"
+              />
+            </label>
+            <label class="label justify-start gap-3 cursor-pointer">
+              <span class="label-text">Não especificado</span>
+              <input
+                v-model="formData.sex"
+                type="radio"
+                name="sex"
+                value="other"
+                class="radio radio-sm checked:bg-primary"
+              />
+            </label>
+          </div>
           <div class="label">
             <span v-show="errors"  class="label-text-alt">Bottom Left label</span>
           </div>
-        </label>
+        </div>
       </div>
       <div class="flex gap-4">
         <label class="form-control w-full">
           <input
-            v-model="formData['main-power']"
+            v-model="formData.mainPower"
             type="text"
             placeholder="Principal poder"
             class="input input-sm input-bordered w-full"
@@ -142,49 +171,37 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script setup lang="ts">
 import AvatarUpload from "~/components/Heroes/AvatarUpload.vue";
+const prop = defineProps({
+  old: {type: Object, default: null}
+})
+const emit = defineEmits(['update'])
 
-export default defineComponent({
-  name: "HeroForm",
-  components: {AvatarUpload},
-  props: {
-    old: {type: Object, default: null}
-  },
-  data () {
-    return {
-      errors: null,
-      formData: {
-        name: '',
+const errors = ref(null)
+const formData = ref({
+  name: '',
         avatar: '',
         codename: '',
         sex: '',
         city: '',
-        'main-power': '',
-        age: 0,
+        mainPower: '',
+        age: null,
         planet: '',
         weakness: '',
         affiliate: '',
         pair: '',
-        'main-color': '',
-      },
+        mainColor: '',
+})
+
+onMounted(() => {
+    if (prop.old) {
+      formData.value = prop.old
     }
-  },
-  mounted () {
-    console.log(this.old);
-    if (this.old) {
-      this.formData = this.old
-    }
-  },
-  watch: {
-    formData: {
-      handler (value) {
-        this.$emit('update', value)
-      },
-      deep: true
-    }
-  },
+})
+
+watch (formData, (value) => {
+  emit('update', value)
 })
 </script>
 

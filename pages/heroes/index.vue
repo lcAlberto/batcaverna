@@ -22,51 +22,48 @@
       </div>
       <div>
         <div class="">
-          <div v-if="heroes" class="grid grid-cols-3 w-full gap-4">
+          <div v-if="heroes" class="grid grid-cols-2 w-full gap-4">
             <CardHeroItem
               v-for="(hero, index) in heroes"
               :key="index"
-              :hero="hero"
+              :hero="hero.attributes"
+              :id="hero.id"
             />
+          </div>
+          <div v-else>
+            Nenhum Herói cadastrado
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import CardHeroItem from "~/components/Home/CardHeroItem.vue";
-import type {Person} from "~/types";
 import PageHeader from "~/components/layout/PageHeader.vue";
+const config = useRuntimeConfig()
 
-export default {
-  components: {PageHeader, CardHeroItem},
-  data() {
-    return {
-      heroes: <Person[]>([]),
-      // const heroes = ref<Person[]>([]);
-      // let addNewMember = ref()
-      // const modal = ref<InstanceType<typeof NewHeroModal> | null>(null)
-      addNewMember: false
-    }
-  },
-  created() {
-    this.fetchHeroes()
-  },
-  methods: {
-    async fetchHeroes () {
-      const baseUrl = 'https://65ad966badbd5aa31be0ff48.mockapi.io/person' // import.meta.env.VUE_APP_BASE_URL
-      await useFetch(`${baseUrl}/`, {
-        'Content-Type': 'Application/json',
-        per_page: 15
-      }).then((response) => {
-        console.log(response.data._value);
-        if (response.status)
-          this.heroes = response.data._value
-      }).catch((error) => console.log(error))
-    }
-  }
-}
+const isLoading = ref(false);
+const error = ref('');
+const heroes = ref([]);
+
+onMounted(async () => {
+  isLoading.value = true;
+  error.value = '';
+  heroes.value = null;
+    await useFetch(`${config.public.apiBase}heroes`, {
+      onRequest({ options }) {
+        options.headers = {
+          Authorization: `Bearer ${config.public.apiSecret}`
+        }
+      },
+    }).then((response) => {
+      if (response.data._value)
+        heroes.value = response.data._value.data
+    }).catch((error) => console.error(error))
+
+  isLoading.value = false;
+})
 </script>
 
 

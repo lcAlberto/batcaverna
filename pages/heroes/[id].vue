@@ -6,8 +6,8 @@
       redirect-back="/heroes"
     />
     <hero-form
-      v-if="heroData"
-      :old="heroData"
+      v-if="heroData && heroData.attributes"
+      :old="heroData.attributes"
       @update="(event) => formData = event"
     />
     <div class="card-actions justify-center">
@@ -58,76 +58,81 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script setup lang="ts">
 import HeroForm from "~/components/Heroes/HeroForm.vue";
 import PageHeader from "~/components/layout/PageHeader.vue";
 
-export default defineComponent({
-  components: {PageHeader, HeroForm},
-  created() {
-    this.fetchHero()
-  },
-  data() {
-    return {
-      imageUrl: '',
-      errors: null,
-      file: null,
-      formData: null,
-      heroData: null,
-      confirmDestroy: false,
-      askToConfirm: false
-    }
-  },
-  computed: {
-    heroId () {
-      return this.$route.params.id;
-    }
-  },
-  methods: {
-    async fetchHero () {
-      await $fetch(`https://65ad966badbd5aa31be0ff48.mockapi.io/person/${this.heroId}`, {
-          method: 'GET',
-          'Content-Type': 'Application/json',
-        }).then((response) => {
-          this.heroData = response;
-        })
-    },
-    update () {
-      if (this.formData) {
-        $fetch(`https://65ad966badbd5aa31be0ff48.mockapi.io/person/${this.heroId}`, {
-          method: 'PUT',
-          body: this.formData,
-          'Content-Type': 'Application/json',
-        }).then((response) => {
-          console.log(response);
-        })
+const config = useRuntimeConfig()
+const route = useRoute()
+const router = useRouter()
+
+const formData = ref(null)
+const heroData = ref({})
+const confirmDestroy = ref(false)
+const askToConfirm = ref(false)
+
+const heroId = route.params.id
+
+onMounted(async () => {
+  await $fetch(`${config.public.apiBase}heroes/${heroId}`, {
+    method: 'GET',
+    'Content-Type': 'Application/json',
+    onRequest({options}) {
+      options.headers = {
+        Authorization: `Bearer ${config.public.apiSecret}`
       }
     },
-    handlerDestroy () {
-      this.askToConfirm = !this.askToConfirm
-      if (this.confirmDestroy) {
-        this.destroy()
-      }
-    },
-    cancelDestroy () {
-      this.confirmDestroy = false
-      this.askToConfirm = false
-    },
-    destroy () {
-      if (this.formData) {
-        $fetch(`https://65ad966badbd5aa31be0ff48.mockapi.io/person/${this.heroId}`, {
-          method: 'DELETE',
-          body: this.formData,
-          'Content-Type': 'Application/json',
-        }).then((response) => {
-          console.log(response);
-          this.$router.push('/heroes')
-        })
-      }
-    }
-  }
+    }).then((response) => {
+    heroData.value = response.data;
+  })
 })
+
+function update () {
+  if (formData) {
+    $fetch(`${config.public.apiBase}heroes/${heroId}`, {
+      method: 'PUT',
+      body: {data: formData.value},
+      'Content-Type': 'Application/json',
+      onRequest({options}) {
+        options.headers = {
+          Authorization: `Bearer ${config.public.apiSecret}`
+        }
+      },
+      }).then(() => {
+      router.push('/heroes')
+    })
+  }
+}
+
+function handlerDestroy () {
+  askToConfirm.value = !askToConfirm.value
+  if (confirmDestroy) {
+    destroy()
+  }
+}
+
+function cancelDestroy () {
+  confirmDestroy.value = false
+  askToConfirm.value = false
+}
+
+function destroy () {
+  if (formData) {
+    $fetch(`${config.public.apiBase}heroes/${heroId}`, {
+      method: 'DELETE',
+      body: {data: formData.value},
+      'Content-Type': 'Application/json',
+      onRequest({options}) {
+        options.headers = {
+          Authorization: `Bearer ${config.public.apiSecret}`
+        }
+      },
+    }).then(() => {
+      router.push('/heroes')
+    })
+  }
+}
+
 </script>
 
 
