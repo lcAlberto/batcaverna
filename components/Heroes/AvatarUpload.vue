@@ -5,13 +5,13 @@
       @click="triggerFileInput"
     >
       <img
-        v-if="file && imageUrl.length > 0"
-        :src="imageUrl"
+        v-if="fileData && imgBlob.length > 0"
+        :src="imgBlob"
         alt="superhero-profile-placeholder"
       />
       <img
-        v-else-if="currentImage"
-        :src="currentImage"
+        v-else-if="prop.currentImage"
+        :src="prop.currentImage"
         alt="superhero-profile-placeholder"
       />
       <img
@@ -21,48 +21,45 @@
       />
     </div>
     <input
-      ref="fileInput"
+      id="fileInput"
       type="file"
       class="hidden"
       @change="handleFileUpload"
     >
   </div>
 </template>
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  emits: ['update'],
-  name: "AvatarUpload",
-  props: {
-    currentImage: { type: String, default: null }
-  },
-  data () {
-    return {
-      imageUrl: '',
-      errors: null,
-      file: null,
-    }
-  },
-  methods: {
-    triggerFileInput() {
-      this.$refs['fileInput'].click();
-    },
-    handleFileUpload(event) {
-      const file = event.target.files[0];
-      console.log(file);
-      if (file) {
-        this.file = file;
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imageUrl = reader.result;
-          this.$emit('update', reader.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-  }
+<script setup lang="ts">
+const emit = defineEmits(['update'])
+const prop = defineProps({
+  currentImage: { type: [Object, String], default: null }
 })
+
+const imgBlob = ref('')
+const fileData = ref(null)
+
+function triggerFileInput() {
+  if (document.getElementById('fileInput'))
+    document.getElementById('fileInput').click()
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    fileData.value = file
+    const reader = new FileReader()
+    reader.onload = () => {
+      toBlob(reader.result)
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+function toBlob (result: string) {
+  const teste = result.replace(/^data:image\/[a-z]+;base64,/, "")
+  imgBlob.value = `data:image/png;base64,${teste}`
+  emit('update', imgBlob);
+}
+
 </script>
 
 

@@ -2,7 +2,7 @@
   <div class="card card-compact bg-base-100 shadow-xl">
     <figure class="max-h-52">
       <img
-        :src="hero.avatar"
+        :src="`${hero.avatar}`"
         alt="Shoes"
         class="w-full"
       />
@@ -26,7 +26,7 @@
         </div>
         <div class="">
           <nuxt-link
-            :to="`heroes/${hero.id}`"
+            :to="`heroes/${id}`"
             class="btn btn-ghost"
           >
             <i class="fa fa-share" />
@@ -55,6 +55,7 @@ interface Person {
 
 defineProps<{
   hero:Person
+  id: number
 }>()
 </script>
 
