@@ -43,7 +43,7 @@
         </li>
         <li>
           <nuxt-link
-            to="/home"
+            to="/teams"
             class=""
           >
             <i class="fa fa-user"></i>

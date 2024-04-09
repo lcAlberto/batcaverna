@@ -1,14 +1,14 @@
 <template>
   <div class="card-body">
     <page-header
+      title="Super Equipes"
+      subtitle="Juntos somos mais fortes"
       redirect-back="/home"
-      subtitle="Todos os herois"
-      title="Heróis"
     >
       <template #end>
         <nuxt-link
+          to="teams/new"
           class="btn btn-sm btn-primary"
-          to="heroes/new"
         >
           <i class="fa fa-plus" />
           Novo
@@ -22,52 +22,45 @@
       </div>
       <div>
         <div class="">
-          <div
-            v-if="heroes"
-            class="grid grid-cols-2 w-full gap-4"
-          >
-            <CardHeroItem
-              v-for="(hero, index) in heroes"
-              :id="hero.id"
+          <div v-if="teams" class="grid grid-cols-2 w-full gap-4">
+            <team-item
+              v-for="(team, index) in teams"
               :key="index"
-              :hero="hero.attributes"
-            />
+              :id="team.id"
+              :team="team.attributes" />
           </div>
           <div v-else>
-            Nenhum Herói cadastrado
+            Nenhum Time cadastrado
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script
-    lang="ts"
-    setup
->
-import CardHeroItem from "~/components/Heroes/CardHeroItem.vue";
+<script setup lang="ts">
 import PageHeader from "~/components/layout/PageHeader.vue";
-
+import TeamItem from "~/components/Teams/TeamItem.vue";
 const config = useRuntimeConfig()
 
 const isLoading = ref(false);
 const error = ref('');
-const heroes = ref([]);
+const teams = ref([]);
 
 onMounted(async () => {
   isLoading.value = true;
   error.value = '';
-  heroes.value = null;
-  await useFetch(`${config.public.apiBase}heroes`, {
-    onRequest({options}) {
-      options.headers = {
-        Authorization: `Bearer ${config.public.apiSecret}`
-      }
-    },
-  }).then((response) => {
-    if (response.data._value)
-      heroes.value = response.data._value.data
-  }).catch((error) => console.error(error))
+  teams.value = null;
+    await useFetch(`${config.public.apiBase}teams`, {
+      onRequest({ options }) {
+        options.headers = {
+          Authorization: `Bearer ${config.public.apiSecret}`
+        }
+      },
+    }).then((response) => {
+      if (response.data._value)
+        teams.value = response.data._value.data
+      console.log(teams.value);
+    }).catch((error) => console.error(error))
 
   isLoading.value = false;
 })
