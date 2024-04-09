@@ -1,13 +1,17 @@
 <template>
   <div class="card-body">
     <page-header
-      title="Heróis"
-      subtitle="Todos os herois"
       redirect-back="/heroes"
+      subtitle="Todos os herois"
+      title="Heróis"
     />
     <hero-form @update="(event) => formData = event" />
     <div class="card-actions justify-center">
-      <button type="button" class="btn btn-primary" @click="submit">
+      <button
+        class="btn btn-primary"
+        type="button"
+        @click="submit"
+      >
         Salvar
       </button>
     </div>
@@ -31,7 +35,8 @@ export default defineComponent({
   },
 
   methods: {
-    submit () {
+    submit() {
+      console.log(this.formData);
       if (this.formData) {
         $fetch('http://localhost:1337/api/heroes', {
           method: 'POST',

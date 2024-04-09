@@ -2,6 +2,7 @@
   <div class="card card-compact bg-base-100 shadow-xl">
     <figure class="max-h-52">
       <img
+        v-if="hero.avatar"
         :src="`${hero.avatar}`"
         alt="Shoes"
         class="w-full"
@@ -10,23 +11,23 @@
     <div class="card-body items-stretch overflow-clip">
       <div class="flex justify-between items-center">
         <div>
-          <h2 class="card-title uppercase">{{ hero.codename }}</h2>
+          <h2 class="card-title uppercase">{{ prop.hero.codename }}</h2>
           <ul class="text-wrap">
             <li>
-              <span class="font-bold uppercase">{{ hero.name }}</span>
+              <span class="font-bold uppercase">{{ prop.hero.name }}</span>
             </li>
             <li>
-              <span>{{ hero.age }} Anos</span>
+              <span>{{ prop.hero.age }} Anos</span>
             </li>
             <li>
               Planeta original:
-              <span class="font-bold">{{ hero.planet }}</span>
+              <span class="font-bold">{{ prop.hero.planet }}</span>
             </li>
           </ul>
         </div>
         <div class="">
           <nuxt-link
-            :to="`heroes/${id}`"
+            :to="`heroes/${prop.id}`"
             class="btn btn-ghost"
           >
             <i class="fa fa-share" />
@@ -36,27 +37,17 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-interface Person {
-  id: number,
-  name: string,
-  createdAt: number,
-  avatar: string,
-  codename: string,
-  city: string,
-  "main-power": string,
-  age: number,
-  planet: string,
-  weakness: string,
-  affiliate: string,
-  pair: string,
-  "main-color": string
-}
+<script
+    lang="ts"
+    setup
+>
 
-defineProps<{
-  hero:Person
-  id: number
-}>()
+// import type {Person} from "~/types";
+
+const prop = defineProps({
+  hero: {type: Object, default: null},
+  id: {type: Number, default: null},
+})
 </script>
 
 
