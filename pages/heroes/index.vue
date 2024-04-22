@@ -21,16 +21,19 @@
         <!--        // barra de filtros-->
       </div>
       <div>
-        <div class="">
+        <div v-if="pending">
+          <p>Loading</p>
+        </div>
+        <div v-else>
           <div
-            v-if="heroes"
+            v-if="data.data.data"
             class="grid grid-cols-2 w-full gap-4"
           >
             <CardHeroItem
-              v-for="(hero, index) in heroes"
+              v-for="(hero, index) in data.data.data"
               :id="hero.id"
               :key="index"
-              :hero="hero.attributes"
+              :hero="hero"
             />
           </div>
           <div v-else>
@@ -50,26 +53,12 @@ import PageHeader from "~/components/layout/PageHeader.vue";
 
 const config = useRuntimeConfig()
 
-const isLoading = ref(false);
-const error = ref('');
-const heroes = ref([]);
-
-onMounted(async () => {
-  isLoading.value = true;
-  error.value = '';
-  heroes.value = null;
-  await useFetch(`${config.public.apiBase}heroes`, {
-    onRequest({options}) {
-      options.headers = {
-        Authorization: `Bearer ${config.public.apiSecret}`
-      }
-    },
-  }).then((response) => {
-    if (response.data._value)
-      heroes.value = response.data._value.data
-  }).catch((error) => console.error(error))
-
-  isLoading.value = false;
+const { data, pending } = await useFetch(`${config.public.apiBase}characters`, {
+  onRequest({options}) {
+    options.headers = {
+      Authorization: `Bearer ${config.public.apiSecret}`
+    }
+  },
 })
 </script>
 

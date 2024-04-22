@@ -7,7 +7,7 @@
         role="button"
         tabindex="0"
       >
-        <span v-if="selected">{{ selected.label }}</span>
+        <span v-if="selected">{{ selected.name }}</span>
         <span v-else>Equipe</span>
         <span
           v-if="loading"
@@ -25,9 +25,9 @@
         <li
           v-for="(item, index) in prop.items"
           :key="index"
-          @click="setSelected(item.id, item.attributes)"
+          @click="setSelected({ id: item.id, name: item.name})"
         >
-          <a>{{ item.attributes.name }}</a>
+          <a>{{ item.name }}</a>
         </li>
       </ul>
     </div>
@@ -49,9 +49,9 @@ const prop = defineProps({
 
 const selected = ref()
 
-function setSelected(id: number, item: object) {
-  selected.value = {id, label: item.name}
-  emit('selected', selected.value)
+function setSelected({id: number, name: string}) {
+  selected.value = {id: number, name: string}
+  emit('selected', {id: number, name: string})
 }
 </script>
 

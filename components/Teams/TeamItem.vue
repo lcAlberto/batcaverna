@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-compact bg-base-100 shadow-xl">
+  <div v-if="team" class="card card-compact bg-base-100 shadow-xl">
     <figure class="max-h-52">
       <img
         :src="`${team.image}`"

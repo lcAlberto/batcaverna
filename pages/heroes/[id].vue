@@ -6,8 +6,8 @@
       redirect-back="/heroes"
     />
     <hero-form
-      v-if="heroData && heroData.attributes"
-      :old="heroData.attributes"
+      v-if="heroData"
+      :old="heroData"
       @update="(event) => formData = event"
     />
     <div class="card-actions justify-center">
@@ -74,7 +74,7 @@ const askToConfirm = ref(false)
 const heroId = route.params.id
 
 onMounted(async () => {
-  await $fetch(`${config.public.apiBase}heroes/${heroId}`, {
+  await $fetch(`${config.public.apiBase}characters/${heroId}`, {
     method: 'GET',
     'Content-Type': 'Application/json',
     onRequest({options}) {
@@ -89,7 +89,7 @@ onMounted(async () => {
 
 function update () {
   if (formData) {
-    $fetch(`${config.public.apiBase}heroes/${heroId}`, {
+    $fetch(`${config.public.apiBase}characters/${heroId}`, {
       method: 'PUT',
       body: {data: formData.value},
       'Content-Type': 'Application/json',
@@ -118,7 +118,7 @@ function cancelDestroy () {
 
 function destroy () {
   if (formData) {
-    $fetch(`${config.public.apiBase}heroes/${heroId}`, {
+    $fetch(`${config.public.apiBase}characters/${heroId}`, {
       method: 'DELETE',
       body: {data: formData.value},
       'Content-Type': 'Application/json',

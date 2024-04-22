@@ -22,12 +22,12 @@
       </div>
       <div>
         <div class="">
-          <div v-if="teams" class="grid grid-cols-2 w-full gap-4">
+          <div v-if="data.teams.data" class="grid grid-cols-2 w-full gap-4">
             <team-item
-              v-for="(team, index) in teams"
+              v-for="(team, index) in data.teams.data"
               :key="index"
               :id="team.id"
-              :team="team.attributes" />
+              :team="team" />
           </div>
           <div v-else>
             Nenhum Time cadastrado
@@ -42,27 +42,12 @@ import PageHeader from "~/components/layout/PageHeader.vue";
 import TeamItem from "~/components/Teams/TeamItem.vue";
 const config = useRuntimeConfig()
 
-const isLoading = ref(false);
-const error = ref('');
-const teams = ref([]);
-
-onMounted(async () => {
-  isLoading.value = true;
-  error.value = '';
-  teams.value = null;
-    await useFetch(`${config.public.apiBase}teams`, {
-      onRequest({ options }) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-    }).then((response) => {
-      if (response.data._value)
-        teams.value = response.data._value.data
-      console.log(teams.value);
-    }).catch((error) => console.error(error))
-
-  isLoading.value = false;
+const { data } = await useFetch(`${config.public.apiBase}teams`, {
+  onRequest({options}) {
+    options.headers = {
+      Authorization: `Bearer ${config.public.apiSecret}`
+    }
+  }
 })
 </script>
 

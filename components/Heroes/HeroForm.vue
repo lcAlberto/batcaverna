@@ -137,7 +137,7 @@
         </label>
         <default-select
           :errors="error"
-          :items="data.data"
+          :items="teams"
           :loading="pending"
           @selected="(event) => updateTeam(event)"
         />
@@ -260,12 +260,16 @@ onMounted(() => {
   }
 })
 
-const {data, pending, error} = await useFetch(`${config.public.apiBase}teams`, {
+const {data: teams, pending, error} = await useFetch(`${config.public.apiBase}teams`, {
   onRequest({options}) {
     options.headers = {
       Authorization: `Bearer ${config.public.apiSecret}`
     }
   },
+  transform: (teams) => {
+    return teams.teams.data
+  },
+  //pick: ['id', 'name']
 })
 
 function updateImage(payload: object) {

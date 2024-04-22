@@ -5,9 +5,10 @@
       subtitle="timeee"
       redirect-back="/teams"
     />
+    {{teamData}}
     <team-form
-      v-if="teamData.attributes"
-      :old="teamData.attributes"
+      v-if="teamData"
+      :old="teamData"
       @update="(event) => formData = event"
     />
     <div class="card-actions justify-center">
@@ -73,28 +74,23 @@ const askToConfirm = ref(false)
 
 const {params} = route
 
-console.log('params', params?.id);
-
-onMounted(async () => {
-
-  await $fetch(`${config.public.apiBase}teams/${params.id}`, {
-    method: 'GET',
-    'Content-Type': 'Application/json',
-    onRequest({options}) {
-      options.headers = {
-        Authorization: `Bearer ${config.public.apiSecret}`
-      }
-    },
-  }).then((response) => {
-    teamData.value = response.data;
-  })
+const { pending } = useFetch(`${config.public.apiBase}teams/${params.id}`, {
+  method: 'GET',
+  'Content-Type': 'Application/json',
+  onRequest({options}) {
+    options.headers = {
+      Authorization: `Bearer ${config.public.apiSecret}`
+    }
+  },
+}).then((response) => {
+  teamData.value = response.data;
 })
 
 function update () {
-  if (formData) {
+  if (formData.value) {
     $fetch(`${config.public.apiBase}teams/${params.id}`, {
       method: 'PUT',
-      body: {data: formData.value},
+      body: formData.value,
       'Content-Type': 'Application/json',
       onRequest({options}) {
         options.headers = {
