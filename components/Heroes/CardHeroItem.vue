@@ -2,7 +2,7 @@
   <div class="card card-compact bg-base-100 shadow-xl">
     <figure class="max-h-52">
       <img
-        v-if="hero.avatar"
+        v-if="hero?.avatar"
         :src="`${hero.avatar}`"
         alt="Shoes"
         class="w-full"

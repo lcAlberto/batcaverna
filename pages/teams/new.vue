@@ -30,11 +30,11 @@ const router = useRouter()
 const formData = ref(null)
 
 function submit() {
-  console.log({data: formData.value})
+  console.log(formData)
   if (formData) {
     $fetch(`${config.public.apiBase}teams/`, {
       method: 'POST',
-      body: {data: formData.value},
+      body: formData.value,
       'Content-Type': 'Application/json',
       onRequest({options}) {
         options.headers = {

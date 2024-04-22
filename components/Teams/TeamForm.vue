@@ -58,9 +58,11 @@ const formData = ref({
   image: '',
   location: '',
   heroes: [],
+  // founded_date: new Date()
 })
 
 onMounted(() => {
+  console.log(prop.old);
   if (prop.old) {
     formData.value = prop.old
   }
