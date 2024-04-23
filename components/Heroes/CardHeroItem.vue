@@ -7,6 +7,12 @@
         alt="Shoes"
         class="w-full"
       />
+      <img
+        v-else
+        alt="Shoes"
+        class="w-1/2"
+        src="@/assets/female_superhero.png"
+      />
     </figure>
     <div class="card-body items-stretch overflow-clip">
       <div class="flex justify-between items-center">

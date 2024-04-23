@@ -25,7 +25,7 @@
         <li
           v-for="(item, index) in prop.items"
           :key="index"
-          @click="setSelected({ id: item.id, name: item.name})"
+          @click="setSelected(item.id, item.name)"
         >
           <a>{{ item.name }}</a>
         </li>
@@ -49,9 +49,9 @@ const prop = defineProps({
 
 const selected = ref()
 
-function setSelected({id: number, name: string}) {
-  selected.value = {id: number, name: string}
-  emit('selected', {id: number, name: string})
+function setSelected(id: number, name: string) {
+  selected.value = {id, name}
+  emit('selected', selected.value)
 }
 </script>
 

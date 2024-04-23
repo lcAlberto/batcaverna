@@ -17,12 +17,15 @@
     </page-header>
 
     <div class="flex flex-col py-2">
-      <div>
-        <!--        // barra de filtros-->
+      <div class="flex items-start gap-4 w-full">
+        <generic-filter @search="(search) => params.search = search"/>
+        <main-select
+          :items="availableSexOptions"
+          @update="(payload:object) => params.sex = payload.value"
+        />
       </div>
-      <div>
+      <div class="py-5">
         <div v-if="pending" class="w-full flex justify-center items-center">
-          <!--          <span class="loading loading-infinity loading-lg"></span>-->
           <div class="grid grid-cols-2 w-full gap-4">
             <div v-for="i in 6" :key="i" class="skeleton w-72 h-72"></div>
           </div>
@@ -37,8 +40,13 @@
             />
           </div>
         </div>
-        <div v-else>
+        <div v-else class="flex items-center justify-center min-h-96">
           Nenhum Herói cadastrado
+          <img
+            alt="sdjh"
+            class="w-32"
+            src="@/assets/empty-state.jpg"
+          />
         </div>
       </div>
     </div>
@@ -48,15 +56,34 @@
 import PageHeader from "~/components/layout/PageHeader.vue";
 import CardHeroItem from "~/components/Heroes/CardHeroItem.vue";
 import {useHeroStore} from '~/store/hero/heroStore';
+import GenericFilter from "~/components/GenericFilter.vue";
+import MainSelect from "~/components/layout/forms/main-select.vue";
 
 const store = useHeroStore()
 
-store.fetchHeroes()
 const heroes = store.getHeroes
 const pending = store.getLoading
-// const errors = store.getErrors
-// const pagination = store.getPagination
+const availableSexOptions = [
+  { value: 'male', label: 'Masculino' },
+  { value: 'female', label: 'Femnino' },
+  { value: 'other', label: 'Outro (Alien)' },
+]
+const params:Ref<RequestParams> = ref({
+  search: '',
+  sex: ''
+})
 
+store.fetchHeroes(params)
+
+watch((params.value), (val) => {
+  store.fetchHeroes(val)
+})
+
+
+interface RequestParams {
+  search: null|string,
+  sex: null|string
+}
 </script>
 
 
