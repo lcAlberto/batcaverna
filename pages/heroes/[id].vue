@@ -1,9 +1,9 @@
 <template>
   <div class="card-body">
     <page-header
-      title="Heróis"
-      subtitle="Todos os herois"
       redirect-back="/heroes"
+      subtitle="Todos os herois"
+      title="Heróis"
     />
     <hero-form
       v-if="heroData"
@@ -18,23 +18,23 @@
           <span class="label-text">Não, cancelar</span>
           <input
             v-model="confirmDestroy"
-            type="radio"
-            name="confirm-destroy"
             class="radio"
+            name="confirm-destroy"
+            type="radio"
             @click="cancelDestroy"
           />
           <span class="label-text">Sim, tenho</span>
           <input
             v-model="confirmDestroy"
-            type="radio"
-            name="confirm-destroy"
             class="radio"
+            name="confirm-destroy"
+            type="radio"
           />
         </label>
       </div>
       <button
-        type="button"
         class="btn btn-outline btn-error"
+        type="button"
         @click="handlerDestroy"
       >
         <span v-if="confirmDestroy">
@@ -49,8 +49,8 @@
       </button>
       <button
         v-if="!askToConfirm && !confirmDestroy"
-        type="button"
         class="btn btn-primary"
+        type="button"
         @click="update"
       >
         Salvar
@@ -58,7 +58,7 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import HeroForm from "~/components/Heroes/HeroForm.vue";
 import PageHeader from "~/components/layout/PageHeader.vue";
 
