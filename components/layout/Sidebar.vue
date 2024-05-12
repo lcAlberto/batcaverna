@@ -4,86 +4,27 @@
     class="drawer w-min shadow-2xl"
   >
     <input
-      v-model="open"
       id="my-drawer-2"
-      type="checkbox"
+      v-model="open"
       class="drawer-toggle"
+      type="checkbox"
     />
     <div class="drawer-side w-full z-10 text-center">
-      <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+      <label aria-label="close sidebar" class="drawer-overlay" for="my-drawer-2"></label>
       <h2 class="font-bold text-lg py-5">BatCaverna</h2>
       <ul class="menu w-52 p-4 text-base-content">
         <!-- Sidebar content here -->
-        <li>
-          <nuxt-link
-            to="/home"
+        <li v-for="(item, index) in list"
+            :key="index"
             class=""
-          >
-            <i class="fa fa-home" />
-            Sala de justiça
-          </nuxt-link>
-        </li>
-        <li>
+        >
           <nuxt-link
-            to="/heroes"
-            class=""
+            :to="item.path"
+            active-class="text-primary bg-transparent"
+            class="hover:border border-primary"
           >
-            <i class="fa fa-mask"></i>
-            Heróis
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link
-            to="/home"
-            class=""
-          >
-            <i class="fa fa-satellite"></i>
-            Torre da liga
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link
-            to="/teams"
-            class=""
-          >
-            <i class="fa fa-user"></i>
-            Equipes
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link
-            to="/home"
-            class=""
-          >
-            <i class="fa fa-graduation-cap"></i>
-            Recrutas
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link
-            to="/home"
-            class=""
-          >
-            <i class="fa fa-rocket"></i>
-            Veículos
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link
-            to="/home"
-            class=""
-          >
-            <i class="fa fa-medal"></i>
-            Missões
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link
-            to="/home"
-            class=""
-          >
-            <i class="fa fa-user-ninja"></i>
-            Vilões
+            <i :class="item.icon"/>
+            {{ item.label }}
           </nuxt-link>
         </li>
       </ul>
@@ -96,12 +37,56 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 const emits = defineEmits(['update:modelValue'])
 const props = defineProps({
-  modelValue: { type: Boolean, required: true }
+  modelValue: {type: Boolean, required: true}
 })
 const open = ref(true)
+
+const list = ref([
+  {
+    path: '/home',
+    icon: 'fa fa-home',
+    label: 'Sala de justiça'
+  },
+  {
+    path: '/heroes',
+    icon: 'fa fa-mask',
+    label: 'Hall dos heróis'
+  },
+  {
+    path: '/#',
+    icon: 'fa fa-satellite',
+    label: 'Torre da Liga'
+  },
+  {
+    path: '/teams',
+    icon: 'fa fa-user',
+    label: 'Equipes'
+  },
+  {
+    path: '/younglings',
+    icon: 'fa fa-graduation-cap',
+    label: 'Recrutas'
+  },
+  {
+    path: '/#',
+    icon: 'fa fa-rocket',
+    label: 'Veículos'
+  },
+  {
+    path: '/#',
+    icon: 'fa fa-medal',
+    label: 'Missões'
+  },
+  {
+    path: '/#',
+    icon: 'fa fa-user-ninja',
+    label: 'Vilões'
+  },
+
+])
 
 watch(() => props.modelValue, (value) => {
   open.value = value
