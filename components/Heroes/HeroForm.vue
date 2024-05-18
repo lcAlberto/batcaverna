@@ -42,7 +42,7 @@
             v-model="formData.age"
             class="input input-sm w-full lg:input-bordered"
             placeholder="Idade"
-            type="number"
+            type="text"
             @input="emit('update', formData)"
           />
           <div class="label">
@@ -251,7 +251,8 @@ const formData = ref({
   affiliate: '',
   pair: '',
   mainColor: '',
-  team: null
+  team: '',
+  team_id: ''
 })
 
 onMounted(() => {
@@ -278,7 +279,8 @@ function updateImage(payload: object) {
 }
 
 function updateTeam(payload: object) {
-  formData.value.team = payload.id
+  formData.value.team_id = payload.id
+  formData.value.team = `${payload.id}`
   emit('update', formData.value)
 }
 
