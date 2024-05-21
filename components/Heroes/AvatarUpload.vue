@@ -1,6 +1,7 @@
 <template>
-  <div class="avatar">
+  <div class="avatar flex flex-col items-center gap-1">
     <div
+      :class="{ 'ring-error': errors }"
       class="w-52 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2"
       @click="triggerFileInput"
     >
@@ -20,6 +21,10 @@
         src="/assets/female_superhero.png"
       />
     </div>
+    <small
+      v-if="errors && errors.length > 0"
+      class="text-error">{{errors[0]}}
+    </small>
     <input
       id="fileInput"
       class="hidden"
@@ -32,7 +37,8 @@
 const emit = defineEmits(['update'])
 const prop = defineProps({
   currentImage: { type: [Object, String], default: null },
-  acceptBlob: {type: Boolean, default: false}
+  acceptBlob: {type: Boolean, default: false},
+  errors: {type: Array, default: null}
 })
 
 const imgBlob = ref('')
