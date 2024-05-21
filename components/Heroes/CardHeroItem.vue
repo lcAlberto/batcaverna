@@ -3,7 +3,7 @@
     <figure class="max-h-52">
       <img
         v-if="hero?.avatar"
-        :src="`${hero.avatar}`"
+        :src="hero.avatar"
         alt="Shoes"
         class="w-full"
       />

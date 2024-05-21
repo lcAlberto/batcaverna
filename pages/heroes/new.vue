@@ -22,12 +22,14 @@ import {useHeroStore} from '~/store/hero/heroStore';
 import HeroForm from "~/components/Heroes/HeroForm.vue";
 import PageHeader from "~/components/layout/PageHeader.vue";
 
+const router = useRouter()
 const store = useHeroStore()
 
 const formData = ref({})
 
-function submitHero():void {
-  store.newHeroes(formData.value)
+async function submitHero():Promise<void> {
+  await store.newHeroes(formData.value)
+      .then(() => router.push('/heroes'))
 }
 
 </script>

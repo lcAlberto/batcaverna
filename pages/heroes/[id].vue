@@ -6,8 +6,8 @@
       title="Heróis"
     />
     <hero-form
-      v-if="heroData"
-      :old="heroData"
+      v-if="hero.value"
+      :old="hero.value"
       @update="(event) => formData = event"
     />
     <div class="card-actions justify-center">
@@ -61,47 +61,30 @@
 <script lang="ts" setup>
 import HeroForm from "~/components/Heroes/HeroForm.vue";
 import PageHeader from "~/components/layout/PageHeader.vue";
+import {useHeroStore} from "~/store/hero/heroStore";
 
-const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
+const store = useHeroStore()
 
-const formData = ref(null)
-const heroData = ref({})
+const hero = store.getHero
+
+const formData = ref({})
 const confirmDestroy = ref(false)
 const askToConfirm = ref(false)
 
-const heroId = route.params.id
-
 onMounted(async () => {
-  await $fetch(`${config.public.apiBase}characters/${heroId}`, {
-    method: 'GET',
-    'Content-Type': 'Application/json',
-    onRequest({options}) {
-      options.headers = {
-        Authorization: `Bearer ${config.public.apiSecret}`
-      }
-    },
-    }).then((response) => {
-    heroData.value = response.data;
-  })
+  await store.fetchHero(route.params.id)
 })
 
-function update () {
-  if (formData) {
-    $fetch(`${config.public.apiBase}characters/${heroId}`, {
-      method: 'PUT',
-      body: {data: formData.value},
-      'Content-Type': 'Application/json',
-      onRequest({options}) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-      }).then(() => {
-      router.push('/heroes')
-    })
-  }
+async function update():Promise<void> {
+  await store.editHero(formData.value, route.params.id)
+      .then(() => router.push('/heroes'))
+}
+
+async function destroy():Promise<void> {
+  await store.destroyHero(route.params.id)
+      .then(() => router.push('/heroes'))
 }
 
 function handlerDestroy () {
@@ -114,23 +97,6 @@ function handlerDestroy () {
 function cancelDestroy () {
   confirmDestroy.value = false
   askToConfirm.value = false
-}
-
-function destroy () {
-  if (formData) {
-    $fetch(`${config.public.apiBase}characters/${heroId}`, {
-      method: 'DELETE',
-      body: {data: formData.value},
-      'Content-Type': 'Application/json',
-      onRequest({options}) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-    }).then(() => {
-      router.push('/heroes')
-    })
-  }
 }
 
 </script>

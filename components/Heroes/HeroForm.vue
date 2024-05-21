@@ -6,12 +6,12 @@
         class="w-min justify-end"
         @update="(event) => updateImage(event)"
       />
-      <div class="">
-        <label class="form-control w-full">
+      <div class="gap-3">
+        <label class="input input-bordered flex items-center gap-2 my-2">
+          <span class="text-slate-500	">Codinome</span>
           <input
             v-model="formData.codename"
-            class="input w-full input-sm lg:input-bordered"
-            placeholder="Codinome"
+            class="grow"
             type="text"
             @input="emit('update', formData)"
           />
@@ -22,11 +22,11 @@
             >Bottom Left label</span>
           </div>
         </label>
-        <label class="form-control w-full">
+        <label class="input input-bordered flex items-center gap-2 my-2">
+          <span class="text-slate-500	">Nome</span>
           <input
             v-model="formData.name"
-            class="input w-full input-sm lg:input-bordered"
-            placeholder="Nome"
+            class="grow"
             type="text"
             @input="emit('update', formData)"
           />
@@ -37,11 +37,11 @@
             >Bottom Left label</span>
           </div>
         </label>
-        <label class="form-control mb-0">
+        <label class="input input-bordered flex items-center gap-2 my-2">
+          <span class="text-slate-500	">Idade</span>
           <input
             v-model="formData.age"
-            class="input input-sm w-full lg:input-bordered"
-            placeholder="Idade"
+            class="grow"
             type="text"
             @input="emit('update', formData)"
           />
@@ -240,7 +240,7 @@ const config = useRuntimeConfig()
 const errors = ref(null)
 const formData = ref({
   name: '',
-  avatar: '',
+  avatar: null,
   codename: '',
   sex: '',
   city: '',

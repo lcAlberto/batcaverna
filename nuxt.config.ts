@@ -9,6 +9,7 @@ export default defineNuxtConfig({
           meta: [
               { charset: 'utf-8' },
               { 'data-theme': 'light' },
+              { name: 'csrf-token', content: '' }
           ]
       }
   },
@@ -27,6 +28,6 @@ export default defineNuxtConfig({
       '@vueuse/nuxt',
   ],
     plugins: [
-        // '~/plugins/apiClient.ts',
+        '~/plugins/csrf.ts'
     ],
 })
