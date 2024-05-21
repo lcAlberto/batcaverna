@@ -16,22 +16,23 @@
       />
       <img
         v-else
-        src="/assets/female_superhero.png"
         alt="superhero-profile-placeholder"
+        src="/assets/female_superhero.png"
       />
     </div>
     <input
       id="fileInput"
-      type="file"
       class="hidden"
+      type="file"
       @change="handleFileUpload"
     >
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 const emit = defineEmits(['update'])
 const prop = defineProps({
-  currentImage: { type: [Object, String], default: null }
+  currentImage: { type: [Object, String], default: null },
+  acceptBlob: {type: Boolean, default: false}
 })
 
 const imgBlob = ref('')
@@ -51,13 +52,13 @@ function handleFileUpload(event) {
       toBlob(reader.result)
     }
     reader.readAsDataURL(file)
+    emit('update', file);
   }
 }
 
 function toBlob (result: string) {
   const teste = result.replace(/^data:image\/[a-z]+;base64,/, "")
   imgBlob.value = `data:image/png;base64,${teste}`
-  emit('update', imgBlob);
 }
 
 </script>

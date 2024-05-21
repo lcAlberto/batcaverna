@@ -45,7 +45,7 @@
           <img
             alt="sdjh"
             class="w-32"
-            src="@/assets/empty-state.jpg"
+            src="@/assets/empty-state.png"
           />
         </div>
       </div>
