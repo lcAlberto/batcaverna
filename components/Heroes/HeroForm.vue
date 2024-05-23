@@ -3,11 +3,15 @@
     <div class="flex items-center justify-center gap-5 py-3 my-5">
       <avatar-upload
         :current-image="formData.avatar"
+        :errors="errors?.codename"
         class="w-min justify-end"
         @update="(event) => updateImage(event)"
       />
       <div class="gap-3">
-        <label class="input input-bordered flex items-center gap-2 my-2">
+        <label
+          :class="{ 'input-error': errors?.codename}"
+          class="input input-bordered flex items-center gap-2 my-2"
+        >
           <span class="text-slate-500	">Codinome</span>
           <input
             v-model="formData.codename"
@@ -17,12 +21,15 @@
           />
           <div class="label">
             <span
-              v-show="errors"
-              class="label-text-alt"
-            >Bottom Left label</span>
+              v-if="errors?.codename"
+              class="label-text-alt text-red-500"
+            >{{ errors?.codename[0] }}</span>
           </div>
         </label>
-        <label class="input input-bordered flex items-center gap-2 my-2">
+        <label
+          :class="{ 'input-error': errors?.name}"
+          class="input input-bordered flex items-center gap-2 my-2"
+        >
           <span class="text-slate-500	">Nome</span>
           <input
             v-model="formData.name"
@@ -32,12 +39,15 @@
           />
           <div class="label">
             <span
-              v-show="errors"
-              class="label-text-alt"
-            >Bottom Left label</span>
+              v-if="errors?.name"
+              class="label-text-alt text-red-500"
+            >{{ errors?.name[0] }}</span>
           </div>
         </label>
-        <label class="input input-bordered flex items-center gap-2 my-2">
+        <label
+          :class="{ 'input-error': errors?.age}"
+          class="input input-bordered flex items-center gap-2 my-2"
+        >
           <span class="text-slate-500	">Idade</span>
           <input
             v-model="formData.age"
@@ -47,9 +57,9 @@
           />
           <div class="label">
             <span
-              v-show="errors"
-              class="label-text-alt"
-            >Bottom Left label</span>
+              v-if="errors?.age"
+              class="label-text-alt text-red-500"
+            >{{ errors?.age[0] }}</span>
           </div>
         </label>
       </div>
@@ -59,6 +69,7 @@
         <label class="form-control w-full">
           <input
             v-model="formData.planet"
+            :class="{ 'input-error': errors?.planet}"
             class="input input-sm input-bordered w-full"
             placeholder="Planeta de origem"
             type="text"
@@ -66,14 +77,15 @@
           />
           <div class="label">
             <span
-              v-show="errors"
+              v-if="errors?.planet"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.planet[0] }}</span>
           </div>
         </label>
         <label class="form-control w-full">
           <input
             v-model="formData.city"
+            :class="{ 'input-error': errors?.city}"
             class="input input-sm input-bordered w-full"
             placeholder="Cidade"
             type="text"
@@ -81,9 +93,9 @@
           />
           <div class="label">
             <span
-              v-show="errors"
+              v-if="errors?.city"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.city[0] }}</span>
           </div>
         </label>
       </div>
@@ -91,6 +103,7 @@
         <label class="form-control w-full">
           <input
             v-model="formData.affiliate"
+            :class="{ 'input-error': errors?.affiliate}"
             class="input input-sm input-bordered w-full"
             placeholder="Afiliado"
             type="text"
@@ -98,14 +111,15 @@
           />
           <div class="label">
             <span
-              v-show="errors"
+              v-if="errors?.affiliare"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.affiliate[0] }}</span>
           </div>
         </label>
         <label class="form-control w-full">
           <input
             v-model="formData.pair"
+            :class="{ 'input-error': errors?.pair}"
             class="input input-sm input-bordered w-full"
             placeholder="Par"
             type="text"
@@ -113,16 +127,17 @@
           />
           <div class="label">
             <span
-              v-show="errors"
+              v-if="errors?.pair"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.pair[0] }}</span>
           </div>
         </label>
       </div>
       <div class="flex gap-4">
         <label class="form-control w-full">
           <input
-            v-model="formData.mainColor"
+            v-model="formData.color"
+            :class="{ 'input-error': errors?.color}"
             class="input input-sm input-bordered w-full"
             placeholder="Principal cor"
             type="text"
@@ -130,13 +145,13 @@
           />
           <div class="label">
             <span
-              v-show="errors"
+              v-if="errors?.color"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.color[0] }}</span>
           </div>
         </label>
         <default-select
-          :errors="error"
+          :errors="errors?.team_id"
           :items="teams"
           :loading="pending"
           @selected="(event) => updateTeam(event)"
@@ -150,6 +165,7 @@
             <label class="label justify-start gap-3 cursor-pointer">
               <input
                 v-model="formData.sex"
+                :class="{ 'input-error': errors?.sex}"
                 class="radio radio-sm checked:bg-primary"
                 name="sex"
                 type="radio"
@@ -161,6 +177,7 @@
             <label class="label justify-start gap-3 cursor-pointer">
               <input
                 v-model="formData.sex"
+                :class="{ 'input-error': errors?.sex}"
                 class="radio radio-sm checked:bg-primary"
                 name="sex"
                 type="radio"
@@ -172,6 +189,7 @@
             <label class="label justify-start gap-3 cursor-pointer">
               <input
                 v-model="formData.sex"
+                :class="{ 'input-error': errors?.sex}"
                 class="radio radio-sm checked:bg-primary"
                 name="sex"
                 type="radio"
@@ -183,16 +201,17 @@
           </div>
           <div class="label">
             <span
-              v-show="errors"
+              v-if="sex"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.sex[0] }}</span>
           </div>
         </div>
       </div>
       <div class="flex gap-4">
         <label class="form-control w-full">
           <input
-            v-model="formData.mainPower"
+            v-model="formData.skils"
+            :class="{ 'input-error': errors?.skils}"
             class="input input-sm input-bordered w-full"
             placeholder="Principal poder"
             type="text"
@@ -200,14 +219,15 @@
           />
           <div class="label">
             <span
-              v-show="errors"
+              v-if="errors?.skils"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.skils[0] }}</span>
           </div>
         </label>
         <label class="form-control w-full">
           <input
             v-model="formData.weakness"
+            :class="{ 'input-error': errors?.weakness}"
             class="input input-sm input-bordered w-full"
             placeholder="Fraqueza"
             type="text"
@@ -215,9 +235,9 @@
           />
           <div class="label">
             <span
-              v-show="errors"
+              v-if="errors?.weakness"
               class="label-text-alt"
-            >Bottom Left label</span>
+            >{{ errors?.weakness[0] }}</span>
           </div>
         </label>
       </div>
@@ -232,25 +252,25 @@ import AvatarUpload from "~/components/Heroes/AvatarUpload.vue";
 import DefaultSelect from "~/components/layout/forms/default-select.vue";
 
 const prop = defineProps({
-  old: {type: Object, default: null}
+  old: {type: Object, default: null},
+  errors: {type: Array<HeroErrors>, default: null},
 })
 const emit = defineEmits(['update'])
 
 const config = useRuntimeConfig()
-const errors = ref(null)
 const formData = ref({
   name: '',
   avatar: null,
   codename: '',
   sex: '',
   city: '',
-  mainPower: '',
+  skils: '',
   age: null,
   planet: '',
   weakness: '',
   affiliate: '',
   pair: '',
-  mainColor: '',
+  color: '',
   team: '',
   team_id: ''
 })
@@ -282,6 +302,18 @@ function updateTeam(payload: object) {
   formData.value.team_id = payload.id
   formData.value.team = `${payload.id}`
   emit('update', formData.value)
+}
+
+interface HeroErrors {
+  codename: string[],
+  name: string[],
+  age: string[],
+  planet: string[],
+  city: string[],
+  affiliate: string[],
+  pair: string[],
+  color: string[],
+  team_id: string[],
 }
 
 

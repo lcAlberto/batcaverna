@@ -33,16 +33,11 @@ export const actions = {
     },
 
     newHeroes: async function(params: object) {
-        try {
-            const formData = new FormData();
-            Object.entries(params).forEach(([key, value]) => {
-                formData.append(key, value);
-            });
-
+        return new Promise((resolve, reject) => {
             const config = useRuntimeConfig()
-            await $fetch(`${config.public.apiBase}characters`, {
+            $fetch(`${config.public.apiBase}characters`, {
                 method: 'POST',
-                body: formData,
+                body: params,
                 'Content-Type': 'Application/json',
                 'Accept': 'Application/json',
                 headers: {
@@ -51,11 +46,13 @@ export const actions = {
             }).then((response) => {
                 // setar toast de success
                 console.log(response);
+                resolve(response);
+            }).catch(({response}) => {
+                // this.errors = JSON.parse(JSON.stringify(response._data.errors));
+                console.log(response._data.errors);
+                reject(response._data.errors);
             })
-        } catch (error) {
-            console.error(error);
-            this.errors = error;
-        }
+        })
     },
 
     fetchHero: async function (hero_id: string | RouteParamValue[]) {
@@ -85,16 +82,11 @@ export const actions = {
     },
 
     editHero: async function(params: object, hero_id: number) {
-        try {
-            const formData = new FormData();
-            Object.entries(params).forEach(([key, value]) => {
-                formData.append(key, value);
-            });
-
+        return new Promise((resolve, reject) => {
             const config = useRuntimeConfig()
-            await $fetch(`${config.public.apiBase}characters/${hero_id}`, {
-                method: 'POST',
-                body: formData,
+            $fetch(`${config.public.apiBase}characters/${hero_id}`, {
+                method: 'PUT',
+                body: params,
                 'Content-Type': 'Application/json',
                 headers: {
                     Authorization: `Bearer ${config.public.apiSecret}`
@@ -102,19 +94,18 @@ export const actions = {
             }).then((response) => {
                 // setar toast de success
                 console.log(response);
+                resolve(response);
+            }).catch(({response}) => {
+                // this.errors = JSON.parse(JSON.stringify(response._data.errors));
+                reject(response._data.errors);
             })
-        } catch (error) {
-            console.error(error);
-            this.errors = error;
-        }
+        });
     },
 
     destroyHero: async function(hero_id: number) {
-        try {
-            const config = useRuntimeConfig()
-            await $fetch(`${config.public.apiBase}characters/${hero_id}`, {
+        return new Promise((resolve, reject) => {const config = useRuntimeConfig()
+            $fetch(`${config.public.apiBase}characters/${hero_id}`, {
                 method: 'DELETE',
-                body: formData,
                 'Content-Type': 'Application/json',
                 headers: {
                     Authorization: `Bearer ${config.public.apiSecret}`
@@ -122,11 +113,13 @@ export const actions = {
             }).then((response) => {
                 // setar toast de success
                 console.log(response);
+                resolve(response);
+            }).catch((error) => {
+                console.error(error);
+                this.errors = error;
+                reject(error);
             })
-        } catch (error) {
-            console.error(error);
-            this.errors = error;
-        }
+        })
     }
 }
 

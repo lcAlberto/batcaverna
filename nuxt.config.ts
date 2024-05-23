@@ -28,6 +28,6 @@ export default defineNuxtConfig({
       '@vueuse/nuxt',
   ],
     plugins: [
-        '~/plugins/csrf.ts'
+        // '~/plugins/csrf.ts'
     ],
 })

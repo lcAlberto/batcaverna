@@ -1,8 +1,8 @@
 <template>
-  <div class="form-control flex flex-row gap-4 justify-center w-full">
-    <!--    <label class="label cursor-pointer">Equipe:</label>-->
+  <div class="form-control flex flex-col gap-1 justify-center w-full">
     <div class="dropdown w-full">
       <div
+        :class="{ 'input-error border border-red-500 text-red-500': errors}"
         class="input input-bordered focus:outline-0 h-8 text-sm flex items-center justify-between"
         role="button"
         tabindex="0"
@@ -31,8 +31,8 @@
         </li>
       </ul>
     </div>
-    <small v-if="errors">
-      {{ errors }}
+    <small v-if="errors && errors.length > 0" class="text-red-500">
+      {{ errors[0] }}
     </small>
   </div>
 </template>

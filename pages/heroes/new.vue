@@ -5,16 +5,17 @@
       subtitle="Todos os herois"
       title="Heróis"
     />
-    <hero-form @update="(event) => formData = event" />
-    <div class="card-actions justify-center">
-      <button
-        class="btn btn-primary"
-        type="button"
-        @click="submitHero()"
-      >
-        Salvar
-      </button>
-    </div>
+    <form enctype="multipart/form-data" @submit.prevent="submitHero">
+      <hero-form :errors="errors" @update="(event) => formData = event" />
+      <div class="card-actions justify-center">
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Salvar
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 <script lang="ts" setup>
@@ -26,10 +27,12 @@ const router = useRouter()
 const store = useHeroStore()
 
 const formData = ref({})
+const errors = ref([])
 
 async function submitHero():Promise<void> {
   await store.newHeroes(formData.value)
       .then(() => router.push('/heroes'))
+      .catch((error) => errors.value = error)
 }
 
 </script>
