@@ -30,7 +30,6 @@ const router = useRouter()
 const formData = ref(null)
 
 function submit() {
-  console.log(formData)
   if (formData) {
     $fetch(`${config.public.apiBase}teams/`, {
       method: 'POST',

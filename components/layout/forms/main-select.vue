@@ -22,7 +22,6 @@ const props = defineProps({
 })
 
 function select(value:object) {
-  console.log(value);
   emits('selected', value)
 }
 

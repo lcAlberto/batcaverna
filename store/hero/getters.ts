@@ -1,6 +1,6 @@
 export const getters = {
     getLoading: (state) => state.loading,
-    getHeroes: (state) => state.heroes.data,
+    getHeroes: (state) => state.heroes,
     getHero: (state) => state.hero,
     getErrors: (state) => state.errors.data,
     getPagination: (state) => state.pagination,
