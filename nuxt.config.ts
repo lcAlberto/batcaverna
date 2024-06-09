@@ -27,7 +27,5 @@ export default defineNuxtConfig({
       '@pinia/nuxt',
       '@vueuse/nuxt',
   ],
-    plugins: [
-        // '~/plugins/csrf.ts'
-    ],
+    plugins: [],
 })

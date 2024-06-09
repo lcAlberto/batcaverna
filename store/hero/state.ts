@@ -1,8 +1,8 @@
 export const state = () => ({
-    heroes: ref([]),
+    heroes: [],
     hero: ref({}),
 
     pagination: ref({}),
     errors: ref([]),
-    loading: ref(false)
+    loading: false
 })

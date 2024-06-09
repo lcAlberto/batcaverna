@@ -66,7 +66,7 @@ const list = ref([
     label: 'Equipes'
   },
   {
-    path: '/#',// younglings
+    path: '#',//'/younglings',
     icon: 'fa fa-graduation-cap',
     label: 'Recrutas'
   },
