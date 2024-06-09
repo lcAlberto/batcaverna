@@ -19,12 +19,13 @@
         />
       </div>
       <ul
-        class="dropdown-content rounded-t-none z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
+        class="dropdown-content rounded-t-none z-[1] menu p-2 shadow bg-base-100 rounded-box w-full max-h-52 overflow-y-auto overflow-x-hidden flex flex-col flex-nowrap"
         tabindex="0"
       >
         <li
           v-for="(item, index) in prop.items"
           :key="index"
+          class="w-full"
           @click="setSelected(item.id, item.name)"
         >
           <a>{{ item.name }}</a>

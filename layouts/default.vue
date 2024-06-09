@@ -6,12 +6,6 @@
       <Navbar v-model="sidebarOpen" />
       <div class="p-5 flex flex-col gap-3">
         <div class="flex flex-row justify-between">
-          <!--          <button-->
-          <!--            class="btn btn-sm btn-ghost rounded-full text-gray-400"-->
-          <!--            @click="router.go(-1)"-->
-          <!--          >-->
-          <!--            <i class="fa fa-arrow-left text-xs"></i>-->
-          <!--          </button>-->
           <breadcrumb v-if="false" />
           <breadcrumb-default v-if="false"/>
         </div>
@@ -23,17 +17,30 @@
   </div>
 <!--  </NuxtLayout>-->
 </template>
-<script
-    setup
-    lang="ts"
->
+<script lang="ts" setup>
 
 import Navbar from "~/components/layout/Navbar.vue";
 import Sidebar from "~/components/layout/Sidebar.vue";
 import Breadcrumb from "~/components/layout/Breadcrumb.vue";
 import BreadcrumbDefault from "~/components/layout/Breadcrumb-default.vue";
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+import {useUiStore} from '~/store/ui/uiStore';
 
 let sidebarOpen = ref(true)
+
+const store = useUiStore();
+const toast = useToast();
+
+watch(() => store.toastMessage, (val) => {
+  setToast(val);
+});
+
+function setToast(val:object) {
+  if (val) {
+    toast[val.type](val.message, val.config);
+  }
+}
 
 </script>
 

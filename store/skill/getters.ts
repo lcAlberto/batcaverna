@@ -1,7 +1,7 @@
 export const getters = {
     getLoading: (state) => state.loading,
-    getHeroes: (state) => state.heroes,
-    getHero: (state) => state.hero,
+    getSkills: (state) => state.skills,
+    getSkill: (state) => state.skill,
     getErrors: (state) => state.errors.data,
     getPagination: (state) => state.pagination,
 }

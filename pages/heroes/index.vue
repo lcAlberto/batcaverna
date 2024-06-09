@@ -18,16 +18,14 @@
 
     <div class="flex flex-col py-2">
       <div class="flex items-start gap-4 w-full">
-        <generic-filter @search="(search) => params.search = search"/>
-        <main-select
-          :items="availableSexOptions"
-          @update="(payload:object) => params.sex = payload.value"
+        <generic-filter
+          :availableFilters="['search', 'gender']"
         />
       </div>
       <div class="py-5">
         <div v-if="pending" class="w-full flex justify-center items-center">
           <div class="grid grid-cols-2 w-full gap-4">
-            <div v-for="i in 6" :key="i" class="skeleton w-72 h-72"></div>
+            <div v-for="i in 6" :key="i" class="skeleton w-100 h-72"></div>
           </div>
         </div>
         <div v-else-if="heroes && heroes.length > 0">
@@ -53,32 +51,29 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {watch} from 'vue';
+import {useHeroStore} from '~/store/hero/heroStore';
+import {useRoute} from 'vue-router';
 import PageHeader from "~/components/layout/PageHeader.vue";
 import CardHeroItem from "~/components/Heroes/CardHeroItem.vue";
-import {useHeroStore} from '~/store/hero/heroStore';
-import GenericFilter from "~/components/GenericFilter.vue";
-import MainSelect from "~/components/layout/forms/main-select.vue";
+import GenericFilter from "~/components/Utils/GenericFilter.vue";
 
 const store = useHeroStore()
-
-const heroes = store.getHeroes
-const pending = store.getLoading
-const availableSexOptions = [
-  { value: 'male', label: 'Masculino' },
-  { value: 'female', label: 'Femnino' },
-  { value: 'other', label: 'Outro (Alien)' },
-]
+const heroes = ref(store.getHeroes)
+const pending = ref(store.getLoading)
+const route = useRoute();
 const params:Ref<RequestParams> = ref({
-  search: '',
+  search: 'aaaa',
   sex: ''
 })
 
-store.fetchHeroes(params)
-
-watch((params.value), (val) => {
-  store.fetchHeroes(val)
+onBeforeMount(() => {
+  store.fetchHeroes(params.value)
 })
 
+watch(() => route.query, async (newQuery) => {
+  await store.fetchHeroes(newQuery);
+}, { deep: true })
 
 interface RequestParams {
   search: null|string,

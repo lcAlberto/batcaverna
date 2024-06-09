@@ -31,13 +31,14 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.5.1",
-    "@fortawesome/free-brands-svg-icons": "^6.5.1",
-    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
     "@pinia/nuxt": "^0.5.1",
+    "@vueuse/core": "^10.7.1",
     "@vueuse/router": "^10.7.1",
     "pinia": "^2.1.7",
-    "@vueuse/core": "^10.7.1"
+    "vue-toast-notification": "^3.1.2"
   }
 }

@@ -1,6 +1,6 @@
 export const state = () => ({
-    heroes: [],
-    hero: ref({}),
+    skills: [],
+    skill: ref({}),
 
     pagination: ref({}),
     errors: ref([]),

@@ -209,29 +209,27 @@
       </div>
       <div class="flex gap-4">
         <label class="form-control w-full">
-          <input
-            v-model="formData.skils"
-            :class="{ 'input-error': errors?.skils}"
-            class="input input-sm input-bordered w-full"
-            placeholder="Principal poder"
-            type="text"
-            @input="emit('update', formData)"
+          <multi-select
+            v-model="formData.skills"
+            :errors="errors?.skills"
+            :items="skills"
+            :loading="pending"
+            label="Equipe"
           />
           <div class="label">
             <span
-              v-if="errors?.skils"
+              v-if="errors?.skills"
               class="label-text-alt"
-            >{{ errors?.skils[0] }}</span>
+            >{{ errors?.skills[0] }}</span>
           </div>
         </label>
         <label class="form-control w-full">
-          <input
+          <multi-select
             v-model="formData.weakness"
-            :class="{ 'input-error': errors?.weakness}"
-            class="input input-sm input-bordered w-full"
-            placeholder="Fraqueza"
-            type="text"
-            @input="emit('update', formData)"
+            :errors="errors?.weakness"
+            :items="skills"
+            :loading="pending"
+            label="Fraquezas"
           />
           <div class="label">
             <span
@@ -250,12 +248,19 @@
 >
 import AvatarUpload from "~/components/Heroes/AvatarUpload.vue";
 import DefaultSelect from "~/components/layout/forms/default-select.vue";
+import {useSkillStore} from "~/store/skill/skillStore";
+import MultiSelect from "~/components/layout/forms/multi-select.vue";
+
+const emit = defineEmits(['update'])
 
 const prop = defineProps({
   old: {type: Object, default: null},
   errors: {type: Array<HeroErrors>, default: null},
 })
-const emit = defineEmits(['update'])
+
+const skillStore = useSkillStore()
+const skills = ref([])
+
 
 const config = useRuntimeConfig()
 const formData = ref({
@@ -264,10 +269,10 @@ const formData = ref({
   codename: '',
   sex: '',
   city: '',
-  skils: '',
+  skills: [],
   age: null,
   planet: '',
-  weakness: '',
+  weakness: [],
   affiliate: '',
   pair: '',
   color: '',
@@ -276,10 +281,16 @@ const formData = ref({
 })
 
 onMounted(() => {
+  skillStore.fetchSkills()
   if (prop.old) {
     formData.value = prop.old
   }
 })
+
+watch(() => skillStore.getSkills, (newSkills) => {
+  skills.value = newSkills
+});
+
 
 const {data: teams, pending, error} = await useFetch(`${config.public.apiBase}teams`, {
   onRequest({options}) {
