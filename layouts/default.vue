@@ -1,17 +1,19 @@
 <template>
   <!--  <NuxtLayout name="default">-->
-  <div class="flex w-full">
-    <Sidebar v-model="sidebarOpen" />
-    <div class="w-full">
-      <Navbar v-model="sidebarOpen" />
-      <div class="p-5 flex flex-col gap-3">
+  <Navbar v-model="sidebarOpen" />
+  <div>
+    <div class="flex content-stretch w-full p-7 gap-5">
+      <Sidebar v-model="sidebarOpen" />
+      <div class="w-full flex flex-col">
         <div class="flex flex-row justify-between">
           <breadcrumb v-if="false" />
           <breadcrumb-default v-if="false"/>
         </div>
-        <div class="card bg-base-100 shadow-xl">
-          <slot class="w-full" />
-        </div>
+        <Card>
+          <template #content>
+            <slot class="w-full" />
+          </template>
+        </Card>
       </div>
     </div>
   </div>
