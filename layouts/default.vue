@@ -17,10 +17,7 @@
   </div>
 <!--  </NuxtLayout>-->
 </template>
-<script
-    lang="ts"
-    setup
->
+<script lang="ts" setup>
 
 import Navbar from "~/components/layout/Navbar.vue";
 import Sidebar from "~/components/layout/Sidebar.vue";
@@ -39,7 +36,7 @@ watch(() => store.toastMessage, (val) => {
   setToast(val);
 });
 
-function setToast(val:Object) {
+function setToast(val:object) {
   if (val) {
     toast[val.type](val.message, val.config);
   }
