@@ -1,11 +1,9 @@
 import {useUiStore} from '@/store/ui/uiStore'
 
-const uiStore = useUiStore()
-// const router = useRouter()
-const config = useRuntimeConfig()
-
 export const actions = {
     fetchSkills: async function (params: object | null) {
+        const uiStore = useUiStore()
+        const config = useRuntimeConfig()
         try {
             const {data, pending, error} = await useFetch(`${config.public.apiBase}skill`, {
                 onRequest({options}) {
@@ -29,6 +27,8 @@ export const actions = {
     },
 
     newSkill: async function(params: object) {
+        const uiStore = useUiStore()
+        const config = useRuntimeConfig()
         try {
             await $fetch(`${config.public.apiBase}skill`, {
                 method: 'POST',

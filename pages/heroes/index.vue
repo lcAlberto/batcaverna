@@ -1,31 +1,31 @@
 <template>
   <div class="card-body">
-    <page-header
-      redirect-back="/home"
-      subtitle="Todos os herois"
-      title="Heróis"
-    >
-      <template #end>
-        <nuxt-link
-          class="btn btn-sm btn-primary"
-          to="heroes/new"
-        >
-          <i class="fa fa-plus" />
-          Novo
-        </nuxt-link>
-      </template>
-    </page-header>
-
     <div class="flex flex-col py-2">
-      <div class="flex items-start gap-4 w-full">
-        <generic-filter
-          :availableFilters="['search', 'gender']"
+      <div class="flex justify-between">
+        <div class="flex items-start gap-4">
+          <generic-filter
+            :availableFilters="['search', 'gender']"
+          />
+        </div>
+        <Button
+          type="button"
+          label="Novo"
+          icon="fa fa-plus"
+          @click="router.push('heroes/new')"
         />
       </div>
       <div class="py-5">
-        <div v-if="pending" class="w-full flex justify-center items-center">
+        <div
+          v-if="pending"
+          class="w-full flex justify-center items-center"
+        >
           <div class="grid grid-cols-2 w-full gap-4">
-            <div v-for="i in 6" :key="i" class="skeleton w-100 h-72"></div>
+            <Skeleton
+              v-for="i in 6"
+              :key="i"
+              height="25rem"
+              width="25rem"
+            ></Skeleton>
           </div>
         </div>
         <div v-else-if="heroes && heroes.length > 0">
@@ -38,7 +38,10 @@
             />
           </div>
         </div>
-        <div v-else class="flex items-center justify-center min-h-96">
+        <div
+          v-else
+          class="flex items-center justify-center min-h-96"
+        >
           Nenhum Herói cadastrado
           <img
             alt="sdjh"
@@ -50,34 +53,36 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup>
-import {watch} from 'vue';
+<script
+    lang="ts"
+    setup
+>
+import {ref, watch} from 'vue';
 import {useHeroStore} from '~/store/hero/heroStore';
-import {useRoute} from 'vue-router';
-import PageHeader from "~/components/layout/PageHeader.vue";
+import {useRoute, useRouter} from 'vue-router';
 import CardHeroItem from "~/components/Heroes/CardHeroItem.vue";
 import GenericFilter from "~/components/Utils/GenericFilter.vue";
 
-const store = useHeroStore()
-const heroes = ref(store.getHeroes)
-const pending = ref(store.getLoading)
 const route = useRoute();
-const params:Ref<RequestParams> = ref({
-  search: 'aaaa',
-  sex: ''
-})
+const router = useRouter();
+const store = useHeroStore()
+const heroes = ref(null)
+const pending = ref(store.getLoading)
+const params: Ref<RequestParams> = ref({search: '', sex: ''})
 
 onBeforeMount(() => {
-  store.fetchHeroes(params.value)
+  store.fetchHeroes(params.value).then((response) => {
+    heroes.value = store.getHeroes
+  })
 })
 
 watch(() => route.query, async (newQuery) => {
   await store.fetchHeroes(newQuery);
-}, { deep: true })
+}, {deep: true})
 
 interface RequestParams {
-  search: null|string,
-  sex: null|string
+  search: null | string,
+  sex: null | string
 }
 </script>
 

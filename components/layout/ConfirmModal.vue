@@ -30,15 +30,14 @@
   </dialog>
 </template >
 <script lang="ts" setup>
-import {defineProps, ref, watch} from 'vue';
 
-const props = defineProps<{
-  modelValue: { type: boolean, required: true },
-  title: { type: string, required: true },
-  message: { type: string, required: true },
-  confirm: { type: string, default: 'Ok' },
-  cancel: { type: string, default: 'Cancelar'}
-}>()
+const props = defineProps({
+  modelValue: { type: Boolean, required: true },
+  title: { type: String, required: true },
+  message: { type: String, required: true },
+  confirm: { type: String, default: 'Ok' },
+  cancel: { type: String, default: 'Cancelar'}
+})
 
 const emits = defineEmits(['update:modelValue', 'confirm']);
 const confirmModal = ref(null);

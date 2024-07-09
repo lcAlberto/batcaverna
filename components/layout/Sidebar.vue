@@ -1,11 +1,15 @@
 <template>
   <Card
-    v-if="open" :class="open ? 'animate-fadein' : 'animate-fadeout'"
+    v-if="open"
+    :class="open ? 'animate-fadein' : 'animate-fadeout'"
     class="animate animate-once animate-duration-500"
     style="width: 25rem; overflow: hidden"
   >
     <template #header>
-      <img alt="user header" src="assets/images/system/ligth.png" />
+      <img
+        alt="user header"
+        src="assets/images/system/ligth.png"
+      />
     </template>
     <template #title>Advanced Card</template>
     <template #subtitle>
@@ -15,9 +19,10 @@
       <div class="card flex justify-center">
         <ul class="menu w-full py-4 text-base-content overflow-y-auto">
           <!-- Sidebar content here -->
-          <li v-for="(item, index) in list"
-              :key="index"
-              class="p-2 flex hover:bg-primary-50 rounded-xl"
+          <li
+            v-for="(item, index) in list"
+            :key="index"
+            class="p-2 flex hover:bg-primary-50 rounded-xl"
           >
             <nuxt-link
               :to="item.path"
@@ -33,12 +38,21 @@
     </template>
     <template #footer>
       <div class="flex justify-center gap-4 mt-auto">
-        <Button aria-label="Filter" icon="fa fa-door-open" raised rounded text/>
+        <Button
+          aria-label="Filter"
+          icon="fa fa-door-open"
+          raised
+          rounded
+          text
+        />
       </div>
     </template>
   </Card>
 </template>
-<script lang="ts" setup>
+<script
+    lang="ts"
+    setup
+>
 const emits = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: {type: Boolean, required: true}
@@ -59,7 +73,7 @@ const list = ref([
   {
     path: '/#watch-tower',
     icon: 'fa fa-satellite',
-    label: 'Torre da Ligvcxvcxva'
+    label: 'Torre da Liga'
   },
   {
     path: '/teams',

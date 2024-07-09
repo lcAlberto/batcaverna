@@ -1,6 +1,7 @@
 import Aura from '@primevue/themes/aura';
 
 export default defineNuxtConfig({
+  ssr: false,
   devtools: { enabled: true },
   app: {
       head: {
@@ -22,10 +23,10 @@ export default defineNuxtConfig({
       }
     },
   modules: [
+      '@pinia/nuxt',
       '@nuxt/eslint',
       '@nuxtjs/eslint-module',
       '@nuxtjs/tailwindcss',
-      '@pinia/nuxt',
       '@vueuse/nuxt',
       '@primevue/nuxt-module'
   ],
@@ -36,5 +37,6 @@ export default defineNuxtConfig({
           }
       }
   },
-    plugins: [],
+    plugins: [
+    ],
 })
