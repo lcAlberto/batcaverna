@@ -1,6 +1,5 @@
-
 export const actions = {
-    setToastMessage: function (message: string, type: string, config: config | null) {
+    setToastMessage: function (message: string, type: string, config: configType | null) {
         this.toastMessage = {
             config: config ? config : this.toastMessage.config,
             message,
@@ -9,7 +8,7 @@ export const actions = {
     },
 }
 
-interface config {
+interface configType {
     duration: number,
     position: string,
     hasIcon: boolean,

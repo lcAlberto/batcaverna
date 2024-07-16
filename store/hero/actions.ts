@@ -1,98 +1,116 @@
 import type {RouteParamValue} from "vue-router";
 import {useUiStore} from '@/store/ui/uiStore'
-
-const uiStore = useUiStore()
-const router = useRouter()
-const config = useRuntimeConfig()
+import {useRouter, useRuntimeConfig} from "#imports";
 
 export const actions = {
-    fetchHeroes: async function (params: RequestParams) {
+    async fetchHeroes(params: RequestParams) {
+        const config = useRuntimeConfig();
+        const uiStore = useUiStore();
+        this.loading = true;
+
         try {
-            const {data, pending, error} = await useFetch(`${config.public.apiBase}characters`, {
-                onRequest({options}) {
-                    options.headers = { Authorization: `Bearer ${config.public.apiSecret}` }
-                    options.params = params
-                },
-            })
-            this.loading = pending;
-            this.heroes = data.value.data.data;
-            this.errors.value = error;
-            const { current_page, last_page, total } = data.value;
+            const {data, error} = await useFetch(`${config.public.apiBase}characters`, {
+                headers: {Authorization: `Bearer ${config.public.apiSecret}`},
+                params
+            });
+
+            if (error.value) {
+                throw error.value;
+            }
+
+            this.heroes = data.value.data;
             this.pagination = {
-                current_page,
-                last_page,
-                total
+                current_page: data.value.current_page,
+                last_page: data.value.last_page,
+                total: data.value.total
             };
         } catch (error) {
-            uiStore.setToastMessage('Erro ao carregar herói', 'error', null)
-            this.errors = error;
+            uiStore.setToastMessage('Erro ao carregar heróis', 'error');
+            this.errors = error
+        } finally {
+            this.loading = false;
         }
     },
 
-    newHeroes: async function(params: object) {
+    async newHero(params: object) {
+        const config = useRuntimeConfig();
+        const uiStore = useUiStore();
+        const router = useRouter();
+
         try {
             await $fetch(`${config.public.apiBase}characters`, {
                 method: 'POST',
                 body: params,
-                'Content-Type': 'Application/json',
-                'Accept': 'Application/json',
-                headers: { Authorization: `Bearer ${config.public.apiSecret}` }
-            })
-            uiStore.setToastMessage('Heroi criado com sucesso', 'success', null)
-            router.push('/heroes')
+                headers: {Authorization: `Bearer ${config.public.apiSecret}`}
+            });
+            uiStore.setToastMessage('Herói criado com sucesso', 'success');
+            router.push('/heroes');
         } catch (error) {
-            uiStore.setToastMessage('Falha ao criar herói', 'error', null)
-            this.errors = error;
+            console.log(error.data.errors);
+            uiStore.setToastMessage(error.data.message, 'error');
+            this.errors = error.data.errors;
         }
     },
 
-    fetchHero: async function (hero_id: string | RouteParamValue[]) {
+    async fetchHero(hero_id: string | RouteParamValue[]) {
+        const config = useRuntimeConfig();
+        const uiStore = useUiStore();
+
         try {
-            const response = await useFetch(`${config.public.apiBase}characters/${hero_id}`, {
-                onRequest({options}) {
-                    options.headers = { Authorization: `Bearer ${config.public.apiSecret}` }
-                },
-            })
-            this.hero.value = response.data.value.data;
+            const {data, error} = await useFetch(`${config.public.apiBase}characters/${hero_id}`, {
+                headers: {Authorization: `Bearer ${config.public.apiSecret}`}
+            });
+
+            if (error.value) {
+                throw error.value;
+            }
+
+            this.hero = data.value.data;
         } catch (error) {
-            uiStore.setToastMessage('Falha ao carregar dados do herói', 'error', null)
+            uiStore.setToastMessage('Falha ao carregar dados do herói', 'error');
             this.errors = error;
         }
     },
 
-    editHero: async function(params: object, hero_id: number) {
+    async editHero(params: object, hero_id: number) {
+        const config = useRuntimeConfig();
+        const uiStore = useUiStore();
+        const router = useRouter();
+
         try {
             await $fetch(`${config.public.apiBase}characters/${hero_id}`, {
                 method: 'PUT',
                 body: params,
-                'Content-Type': 'Application/json',
-                headers: { Authorization: `Bearer ${config.public.apiSecret}` }
-            })
-            uiStore.setToastMessage('Herói atualizado com sucesso', 'success', null)
-            router.push('/heroes')
+                headers: {Authorization: `Bearer ${config.public.apiSecret}`}
+            });
+            uiStore.setToastMessage('Herói atualizado com sucesso', 'success');
+            router.push('/heroes');
         } catch (error) {
-            uiStore.setToastMessage('Falha ao editar dados do herói', 'error', null)
+            uiStore.setToastMessage('Falha ao editar dados do herói', 'error');
             this.errors = error;
         }
     },
 
-    destroyHero: async function(hero_id: string) {
+    async destroyHero(hero_id: string) {
+        const config = useRuntimeConfig();
+        const uiStore = useUiStore();
+        const router = useRouter();
+
         try {
             await $fetch(`${config.public.apiBase}characters/${hero_id}`, {
                 method: 'DELETE',
-                'Content-Type': 'Application/json',
-                headers: { Authorization: `Bearer ${config.public.apiSecret}` }
-            })
-            uiStore.setToastMessage('Herói excluído com sucesso', 'success', null)
-            router.push('/heroes')
+                headers: {Authorization: `Bearer ${config.public.apiSecret}`}
+            });
+            uiStore.setToastMessage('Herói excluído com sucesso', 'success');
+            router.push('/heroes');
         } catch (error) {
-            uiStore.setToastMessage('Falha ao excluir herói', 'error', null)
+            uiStore.setToastMessage('Falha ao excluir herói', 'error');
             this.errors = error;
         }
     }
 }
 
 interface RequestParams {
-    search: null|string,
-    sex: null|string
+    search: null | string,
+    sex: null | string
 }

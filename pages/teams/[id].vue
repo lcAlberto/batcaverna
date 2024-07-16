@@ -1,66 +1,41 @@
 <template>
-  <div class="card-body">
-    <page-header
-      title="Time"
-      subtitle="timeee"
-      redirect-back="/teams"
-    />
-    {{teamData}}
+  <div class="py-5">
+    <div class="w-full flex justify-end">
+      <Button
+        type="button"
+        label="Excluir"
+        severity="danger"
+        icon="fa fa-trash"
+        class="ml-auto"
+        @click="confirmDestroy = !confirmDestroy"
+      />
+    </div>
     <team-form
       v-if="teamData"
       :old="teamData"
       @update="(event) => formData = event"
     />
-    <div class="card-actions justify-center">
-      <div
-        v-if="askToConfirm"
-        class="form-control flex">
-        <label class="label cursor-pointer gap-4">
-          <span class="label-text">Não, cancelar</span>
-          <input
-            v-model="confirmDestroy"
-            type="radio"
-            name="confirm-destroy"
-            class="radio"
-            @click="cancelDestroy"
-          />
-          <span class="label-text">Sim, tenho</span>
-          <input
-            v-model="confirmDestroy"
-            type="radio"
-            name="confirm-destroy"
-            class="radio"
-          />
-        </label>
-      </div>
-      <button
+    <div class="flex justify-end gap-4 w-full mt-5">
+      <Button
         type="button"
-        class="btn btn-outline btn-error"
-        @click="handlerDestroy"
-      >
-        <span v-if="confirmDestroy">
-          Ok, excluir
-        </span>
-        <span v-else-if="askToConfirm">
-          Tem certeza que quer excluir?
-        </span>
-        <span v-else>
-          Excluir dos registros
-        </span>
-      </button>
-      <button
-        v-if="!askToConfirm && !confirmDestroy"
+        label="Cancelar"
+        severity="secondary"
+        icon="fa fa-arrow-left"
+        @click="router.go(-1)"
+      />
+      <Button
         type="button"
-        class="btn btn-primary"
+        label="Salvar"
+        icon="fa fa-check"
         @click="update"
-      >
-        Salvar
-      </button>
+      />
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import PageHeader from "~/components/layout/PageHeader.vue";
+<script
+    setup
+    lang="ts"
+>
 import TeamForm from "~/components/Teams/TeamForm.vue";
 
 const config = useRuntimeConfig()
@@ -74,7 +49,7 @@ const askToConfirm = ref(false)
 
 const {params} = route
 
-const { pending } = useFetch(`${config.public.apiBase}teams/${params.id}`, {
+const {pending} = useFetch(`${config.public.apiBase}teams/${params.id}`, {
   method: 'GET',
   'Content-Type': 'Application/json',
   onRequest({options}) {
@@ -86,7 +61,7 @@ const { pending } = useFetch(`${config.public.apiBase}teams/${params.id}`, {
   teamData.value = response.data;
 })
 
-function update () {
+function update() {
   if (formData.value) {
     $fetch(`${config.public.apiBase}teams/${params.id}`, {
       method: 'PUT',
@@ -97,25 +72,25 @@ function update () {
           Authorization: `Bearer ${config.public.apiSecret}`
         }
       },
-      }).then(() => {
+    }).then(() => {
       router.push('/teams')
     })
   }
 }
 
-function handlerDestroy () {
+function handlerDestroy() {
   askToConfirm.value = !askToConfirm.value
   if (confirmDestroy) {
     destroy()
   }
 }
 
-function cancelDestroy () {
+function cancelDestroy() {
   confirmDestroy.value = false
   askToConfirm.value = false
 }
 
-function destroy () {
+function destroy() {
   if (formData) {
     $fetch(`${config.public.apiBase}teams/${teamId}`, {
       method: 'DELETE',

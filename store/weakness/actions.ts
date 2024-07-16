@@ -1,7 +1,6 @@
 import {useUiStore} from '@/store/ui/uiStore'
 
 const uiStore = useUiStore()
-// const router = useRouter()
 const config = useRuntimeConfig()
 
 export const actions = {

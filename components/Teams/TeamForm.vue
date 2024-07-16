@@ -1,43 +1,67 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-2 gap-4">
-    <div class="flex items-center justify-center gap-5 py-3 my-5">
-      <avatar-upload
-        :current-image="formData.image"
-        class="w-min justify-end"
-        @update="(event) => updateImage(event)"
-      />
-      <div class="">
-        <label class="form-control w-full">
-          <input
-            v-model="formData.name"
-            class="input w-full input-sm lg:input-bordered"
-            placeholder="Nome"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
-            <span
-              v-show="errors"
-              class="label-text-alt"
-            >Bottom Left label</span>
+  <div>
+    <div class="grid xl:grid-cols-2 lg:grid-cols-1 gap-4">
+      <Fieldset
+        class="w-full"
+        legend="Header"
+        :toggleable="true"
+      >
+        <template #legend>
+          <div class="flex items-center pl-2">
+            <i class="fa fa-user"/>
+            <span class="font-bold p-2">Imagem</span>
           </div>
-        </label>
-        <label class="form-control w-full">
-          <input
-            v-model="formData.location"
-            class="input w-full input-sm lg:input-bordered"
-            placeholder="Local"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
-            <span
-              v-show="errors"
-              class="label-text-alt"
-            >Bottom Left label</span>
+        </template>
+        <avatar-upload
+          :current-image="formData.image"
+          class="w-full justify-end"
+          @update="(event) => updateImage(event)"
+        />
+      </Fieldset>
+      <Fieldset
+        class="w-full"
+        legend="Header"
+        :toggleable="true"
+      >
+        <template #legend>
+          <div class="flex items-center pl-2">
+            <i class="fa fa-user"/>
+            <span class="font-bold p-2">Dados da equipe</span>
           </div>
-        </label>
-      </div>
+        </template>
+        <div class="flex w-full gap-4">
+          <div class="py-4 w-full">
+            <FloatLabel>
+              <InputText
+                id="name"
+                v-model="formData.name"
+                :invalid="errors?.name"
+                class="w-full"
+              />
+              <label for="username">Nome</label>
+            </FloatLabel>
+            <span
+              v-if="errors?.name"
+              class="label-text-alt text-red-500"
+            >{{ errors?.name[0] }}</span>
+          </div>
+          <div class="py-4 w-full">
+            <FloatLabel>
+              <InputText
+                id="location"
+                v-model="formData.location"
+                :invalid="errors?.location"
+                class="w-full"
+              />
+              <label for="username">Localização</label>
+            </FloatLabel>
+            <span
+              v-if="errors?.location"
+              class="label-text-alt text-red-500"
+            >{{ errors?.location[0] }}</span>
+          </div>
+        </div>
+      </Fieldset>
     </div>
   </div>
 </template>
@@ -58,11 +82,9 @@ const formData = ref({
   image: '',
   location: '',
   heroes: [],
-  // founded_date: new Date()
 })
 
 onMounted(() => {
-  console.log(prop.old);
   if (prop.old) {
     formData.value = prop.old
   }
@@ -72,6 +94,10 @@ function updateImage(payload: object) {
   formData.value.image = payload
   emit('update', formData)
 }
+
+watch(() => formData.value, (form) => {
+  emit('update', form)
+}, {deep: true});
 
 </script>
 

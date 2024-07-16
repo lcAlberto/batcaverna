@@ -1,243 +1,271 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-2 gap-4">
-    <div class="flex items-center justify-center gap-5 py-3 my-5">
-      <avatar-upload
-        :current-image="formData.avatar"
-        :errors="errors?.codename"
-        class="w-min justify-end"
-        @update="(event) => updateImage(event)"
-      />
-      <div class="gap-3">
-        <label
-          :class="{ 'input-error': errors?.codename}"
-          class="input input-bordered flex items-center gap-2 my-2"
-        >
-          <span class="text-slate-500	">Codinome</span>
-          <input
-            v-model="formData.codename"
-            class="grow"
-            type="text"
-            @input="emit('update', formData)"
+  <div>
+    <div class="grid xl:grid-cols-3 lg:grid-cols-1 gap-4">
+      <Fieldset
+        class="w-full"
+        legend="Header"
+        :toggleable="true"
+      >
+        <template #legend>
+          <div class="flex items-center pl-2">
+            <i class="fa fa-user"/>
+            <span class="font-bold p-2">Dados Pessoais</span>
+          </div>
+        </template>
+        <div class="p-4 w-full">
+          <avatar-upload
+            :current-image="formData.image"
+            :errors="errors?.image"
+            class="flex justify-center w-full"
+            @update="(event) => updateImage(event)"
           />
-          <div class="label">
+          <div class="py-4">
+            <FloatLabel>
+              <InputText
+                id="codename"
+                v-model="formData.codename"
+                :invalid="errors?.codename"
+                class="w-full"
+              />
+              <label for="username">Codinome</label>
+            </FloatLabel>
             <span
               v-if="errors?.codename"
               class="label-text-alt text-red-500"
             >{{ errors?.codename[0] }}</span>
           </div>
-        </label>
-        <label
-          :class="{ 'input-error': errors?.name}"
-          class="input input-bordered flex items-center gap-2 my-2"
-        >
-          <span class="text-slate-500	">Nome</span>
-          <input
-            v-model="formData.name"
-            class="grow"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
+
+          <div class="py-4">
+            <FloatLabel>
+              <InputText
+                id="name"
+                v-model="formData.name"
+                :invalid="errors?.name"
+                class="w-full"
+              />
+              <label for="username">Nome</label>
+            </FloatLabel>
             <span
               v-if="errors?.name"
               class="label-text-alt text-red-500"
             >{{ errors?.name[0] }}</span>
           </div>
-        </label>
-        <label
-          :class="{ 'input-error': errors?.age}"
-          class="input input-bordered flex items-center gap-2 my-2"
-        >
-          <span class="text-slate-500	">Idade</span>
-          <input
-            v-model="formData.age"
-            class="grow"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
+
+          <div class="py-4">
+            <FloatLabel>
+              <InputNumber
+                id="age"
+                v-model="formData.age"
+                :invalid="errors?.age"
+                class="w-full"
+              />
+              <label for="username">Idade</label>
+            </FloatLabel>
             <span
               v-if="errors?.age"
               class="label-text-alt text-red-500"
             >{{ errors?.age[0] }}</span>
           </div>
-        </label>
-      </div>
-    </div>
-    <div class="mx-auto lg:w-2/3">
-      <div class="flex gap-4">
-        <label class="form-control w-full">
-          <input
-            v-model="formData.planet"
-            :class="{ 'input-error': errors?.planet}"
-            class="input input-sm input-bordered w-full"
-            placeholder="Planeta de origem"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
-            <span
-              v-if="errors?.planet"
-              class="label-text-alt"
-            >{{ errors?.planet[0] }}</span>
-          </div>
-        </label>
-        <label class="form-control w-full">
-          <input
-            v-model="formData.city"
-            :class="{ 'input-error': errors?.city}"
-            class="input input-sm input-bordered w-full"
-            placeholder="Cidade"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
-            <span
-              v-if="errors?.city"
-              class="label-text-alt"
-            >{{ errors?.city[0] }}</span>
-          </div>
-        </label>
-      </div>
-      <div class="flex gap-4">
-        <label class="form-control w-full">
-          <input
-            v-model="formData.affiliate"
-            :class="{ 'input-error': errors?.affiliate}"
-            class="input input-sm input-bordered w-full"
-            placeholder="Afiliado"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
-            <span
-              v-if="errors?.affiliare"
-              class="label-text-alt"
-            >{{ errors?.affiliate[0] }}</span>
-          </div>
-        </label>
-        <label class="form-control w-full">
-          <input
-            v-model="formData.pair"
-            :class="{ 'input-error': errors?.pair}"
-            class="input input-sm input-bordered w-full"
-            placeholder="Par"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
-            <span
-              v-if="errors?.pair"
-              class="label-text-alt"
-            >{{ errors?.pair[0] }}</span>
-          </div>
-        </label>
-      </div>
-      <div class="flex gap-4">
-        <label class="form-control w-full">
-          <input
-            v-model="formData.color"
-            :class="{ 'input-error': errors?.color}"
-            class="input input-sm input-bordered w-full"
-            placeholder="Principal cor"
-            type="text"
-            @input="emit('update', formData)"
-          />
-          <div class="label">
-            <span
-              v-if="errors?.color"
-              class="label-text-alt"
-            >{{ errors?.color[0] }}</span>
-          </div>
-        </label>
-        <default-select
-          :errors="errors?.team_id"
-          :items="teams"
-          :loading="pending"
-          @selected="(event) => updateTeam(event)"
-        />
-        <!--      </div>-->
-      </div>
-      <div class="flex gap-4">
-        <div class="form-control flex flex-row gap-4 justify-center pb-2 w-full">
-          <label class="label cursor-pointer">Sexo:</label>
-          <div class="flex flex-row gap-4">
-            <label class="label justify-start gap-3 cursor-pointer">
-              <input
-                v-model="formData.sex"
-                :class="{ 'input-error': errors?.sex}"
-                class="radio radio-sm checked:bg-primary"
-                name="sex"
-                type="radio"
-                value="male"
-                @change="emit('update', formData)"
-              />
-              <span class="label-text">Masculino</span>
-            </label>
-            <label class="label justify-start gap-3 cursor-pointer">
-              <input
-                v-model="formData.sex"
-                :class="{ 'input-error': errors?.sex}"
-                class="radio radio-sm checked:bg-primary"
-                name="sex"
-                type="radio"
-                value="female"
-                @change="emit('update', formData)"
-              />
-              <span class="label-text">Feminino</span>
-            </label>
-            <label class="label justify-start gap-3 cursor-pointer">
-              <input
-                v-model="formData.sex"
-                :class="{ 'input-error': errors?.sex}"
-                class="radio radio-sm checked:bg-primary"
-                name="sex"
-                type="radio"
-                value="other"
-                @change="emit('update', formData)"
-              />
-              <span class="label-text">Não especificado</span>
-            </label>
-          </div>
-          <div class="label">
-            <span
-              v-if="sex"
-              class="label-text-alt"
-            >{{ errors?.sex[0] }}</span>
-          </div>
         </div>
-      </div>
-      <div class="flex gap-4">
-        <label class="form-control w-full">
-          <multi-select
-            v-model="formData.skills"
-            :errors="errors?.skills"
-            :items="skills"
-            :loading="pending"
-            label="Equipe"
-          />
-          <div class="label">
-            <span
-              v-if="errors?.skills"
-              class="label-text-alt"
-            >{{ errors?.skills[0] }}</span>
+      </Fieldset>
+
+      <div class="xl:col-span-2 lg:col-span-1 flex flex-col gap-4">
+        <Fieldset
+          legend="Header"
+          :toggleable="true"
+          class="mb-auto"
+        >
+          <template #legend>
+            <div class="flex items-center pl-2">
+              <i class="fa fa-user"/>
+              <span class="font-bold p-2">Dados do Herói</span>
+            </div>
+          </template>
+          <div class="grid xl:grid-cols-2 lg:grid-cols-1 gap-4">
+            <div class="">
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
+                    for="planet"
+                    class="font-bold block mb-2"
+                  > Planeta</label>
+                  <InputText
+                    v-model="formData.planet"
+                    inputId="planet"
+                    :invalid="errors?.planet"
+                    fluid
+                  />
+                </div>
+                <span
+                  v-if="errors?.planet"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.planet[0] }}</span>
+              </div>
+
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
+                    for="affiliate"
+                    class="font-bold block mb-2"
+                  > Afiliado</label>
+                  <InputText
+                    v-model="formData.affiliate"
+                    inputId="affiliate"
+                    :invalid="errors?.affiliate"
+                    fluid
+                  />
+                </div>
+                <span
+                  v-if="errors?.affiliate"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.affiliate[0] }}</span>
+              </div>
+
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
+                    for="city"
+                    class="font-bold block mb-2"
+                  > Cidade</label>
+                  <InputText
+                    v-model="formData.city"
+                    inputId="affiliate"
+                    :invalid="errors?.city"
+                    fluid
+                  />
+                </div>
+                <span
+                  v-if="errors?.city"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.city[0] }}</span>
+              </div>
+              <div class="py-3 flex gap-4">
+                <div class="flex-auto">
+                  <label
+                    for="color"
+                    class="font-bold block mb-2"
+                  > Cor predominante</label>
+                  {{ colorWithHash }}
+                  <ColorPicker
+                    v-model="colorWithHash"
+                    inputId="color"
+                    format="hex"
+                    :invalid="errors?.color"
+                    class="mb-4"
+                  />
+                </div>
+                <span
+                  v-if="errors?.color"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.color[0] }}</span>
+              </div>
+
+            </div>
+            <div class="w-full">
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
+                    for="team_id"
+                    class="font-bold block mb-2"
+                  > Equipe</label>
+                  <Select
+                    v-model="formData.team_id"
+                    :options="teams"
+                    :loading="pending"
+                    :invalid="errors?.team_id"
+                    optionLabel="name"
+                    optionValue="id"
+                    labelId="id"
+                    placeholder="Selecione uma equipe"
+                    class="w-full"
+                  />
+                </div>
+                <span
+                  v-if="errors?.team_id"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.team_id[0] }}</span>
+              </div>
+
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
+                    for="skills"
+                    class="font-bold block mb-2"
+                  > Habilidades, poderes ou pontos fortes</label>
+                  <MultiSelect
+                    v-model="formData.skills"
+                    :options="skills"
+                    :invalid="errors?.skills"
+                    id="skills"
+                    display="chip"
+                    optionLabel="name"
+                    optionValue="id"
+                    placeholder="Habilidades"
+                    :maxSelectedLabels="10"
+                    class="w-full"
+                  />
+                </div>
+                <span
+                  v-if="errors?.skills"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.skills[0] }}</span>
+              </div>
+
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
+                    for="sex"
+                    class="font-bold block mb-2"
+                  > Gênero biológico
+                  </label>
+                  <Select
+                    v-model="formData.sex"
+                    :options="genders"
+                    :loading="pending"
+                    :invalid="errors?.sex"
+                    optionLabel="label"
+                    optionValue="value"
+                    labelId="value"
+                    placeholder="Selecione um sexo biológico para qual o herói ou criatura pertence"
+                    class="w-full"
+                  />
+                </div>
+                <span
+                  v-if="errors?.sex"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.sex[0] }}</span>
+              </div>
+
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
+                    for="weakness"
+                    class="font-bold block mb-2"
+                  > Fraquezas ou pontos fracos</label>
+                  <MultiSelect
+                    v-model="formData.weakness"
+                    :options="weakness"
+                    :invalid="errors?.weakness"
+                    id="weakness"
+                    display="chip"
+                    optionLabel="name"
+                    optionValue="id"
+                    placeholder="Fraquezas"
+                    :maxSelectedLabels="5"
+                    class="w-full"
+                  />
+                </div>
+                <span
+                  v-if="errors?.weakness"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.weakness[0] }}</span>
+              </div>
+            </div>
           </div>
-        </label>
-        <label class="form-control w-full">
-          <multi-select
-            v-model="formData.weakness"
-            :errors="errors?.weakness"
-            :items="skills"
-            :loading="pending"
-            label="Fraquezas"
-          />
-          <div class="label">
-            <span
-              v-if="errors?.weakness"
-              class="label-text-alt"
-            >{{ errors?.weakness[0] }}</span>
-          </div>
-        </label>
+        </Fieldset>
+        <div class="mt-auto flex justify-end gap-4">
+          <slot name="submit"/>
+        </div>
       </div>
     </div>
   </div>
@@ -246,10 +274,8 @@
     lang="ts"
     setup
 >
-import AvatarUpload from "~/components/Heroes/AvatarUpload.vue";
-import DefaultSelect from "~/components/layout/forms/default-select.vue";
 import {useSkillStore} from "~/store/skill/skillStore";
-import MultiSelect from "~/components/layout/forms/multi-select.vue";
+import AvatarUpload from "~/components/Heroes/AvatarUpload.vue";
 
 const emit = defineEmits(['update'])
 
@@ -263,6 +289,16 @@ const skills = ref([])
 
 
 const config = useRuntimeConfig()
+const genders = [
+  {value: 'male', label: 'Masculino'},
+  {value: 'female', label: 'Feminino'},
+  {value: 'other', label: 'Outro'},
+]
+const weakness = [
+  {id: 1, name: 'Kriptonita'},
+  {id: 2, name: 'Emocional'},
+  {id: 3, name: 'Outro'},
+]
 const formData = ref({
   name: '',
   avatar: null,
@@ -275,7 +311,7 @@ const formData = ref({
   weakness: [],
   affiliate: '',
   pair: '',
-  color: '',
+  color: '#10B981',
   team: '',
   team_id: ''
 })
@@ -284,15 +320,20 @@ onMounted(() => {
   skillStore.fetchSkills()
   if (prop.old) {
     formData.value = prop.old
+    if (typeof prop.old.weakness !== 'object')
+      formData.value.weakness = [prop.old.weakness]
   }
 })
 
 watch(() => skillStore.getSkills, (newSkills) => {
   skills.value = newSkills
 });
+watch(() => formData.value, (form) => {
+  emit('update', form)
+}, {deep: true});
 
 
-const {data: teams, pending, error} = await useFetch(`${config.public.apiBase}teams`, {
+const {data: teams, pending} = await useFetch(`${config.public.apiBase}teams`, {
   onRequest({options}) {
     options.headers = {
       Authorization: `Bearer ${config.public.apiSecret}`
@@ -301,22 +342,26 @@ const {data: teams, pending, error} = await useFetch(`${config.public.apiBase}te
   transform: (teams) => {
     return teams.teams.data
   },
-  //pick: ['id', 'name']
 })
 
 function updateImage(payload: object) {
   formData.value.image = payload
-  emit('update', formData.value)
 }
 
-function updateTeam(payload: object) {
-  formData.value.team_id = payload.id
-  formData.value.team = `${payload.id}`
-  emit('update', formData.value)
-}
+const colorWithHash = computed({
+  get() {
+    return formData.value.color && formData.value.color.startsWith('#')
+        ? formData.value.color
+        : `#${formData.value.color}`;
+  },
+  set(value) {
+    formData.value.color = `#${value}`
+  }
+});
 
 interface HeroErrors {
   codename: string[],
+  image: string[],
   name: string[],
   age: string[],
   planet: string[],
@@ -326,7 +371,6 @@ interface HeroErrors {
   color: string[],
   team_id: string[],
 }
-
 
 </script>
 
