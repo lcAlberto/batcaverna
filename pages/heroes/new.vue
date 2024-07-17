@@ -1,52 +1,49 @@
 <template>
   <div class="card-body">
-    <page-header
-      title="Heróis"
-      subtitle="Todos os herois"
-      redirect-back="/heroes"
-    />
-    <hero-form @update="(event) => formData = event" />
-    <div class="card-actions justify-center">
-      <button type="button" class="btn btn-primary" @click="submit">
-        Salvar
-      </button>
-    </div>
+    <hero-form
+      :errors="errors"
+      @update="(event) => formData = event"
+    >
+      <template #submit>
+        <Button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          icon="fa fa-arrow-left"
+          @click="router.go(-1)"
+        />
+        <Button
+          type="button"
+          label="Salvar"
+          icon="fa fa-check"
+          :loading="loading"
+          @click="submitHero()"
+        />
+      </template>
+    </hero-form>
   </div>
 </template>
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script
+    lang="ts"
+    setup
+>
+import {ref} from 'vue';
+import {useHeroStore} from '~/store/hero/heroStore';
 import HeroForm from "~/components/Heroes/HeroForm.vue";
-import PageHeader from "~/components/layout/PageHeader.vue";
+import {useRouter} from "vue-router";
 
-export default defineComponent({
-  name: "new-hero",
-  components: {PageHeader, HeroForm},
-  data() {
-    return {
-      imageUrl: '',
-      errors: null,
-      file: null,
-      formData: null,
-    }
-  },
+const store = useHeroStore()
+const router = useRouter()
 
-  methods: {
-    submit () {
-      if (this.formData) {
-        $fetch('http://localhost:1337/api/heroes', {
-          method: 'POST',
-          body: {data: this.formData},
-          'Content-Type': 'Application/json',
-          headers: {
-            Authorization: 'Bearer c122eb6fb2605c98cc06c0b23ecfe34812d71a219ba16dc44c0aee851bb23c39f05194965356ea137b9904bcb622cebd02d6fc23afd821a2370cd3df538a58ad617fb9033f7ebdfa80f3d5b639a3658dcad19b9537b4de2bd7f059cf95b99765b50b31ef3a8036d043f35d6a4f35b9661a65eba4ca8b54741e3dd9611ec33825'
-          }
-        }).then(() => {
-          this.$router.push('/heroes')
-        })
-      }
-    }
-  }
-})
+const formData = ref({})
+const loading = store.loading
+const errors = ref(null)
+
+async function submitHero(): Promise<void> {
+  await store.newHero(formData.value)
+  errors.value = store.getErrors
+}
+
 </script>
 
 

@@ -1,136 +1,81 @@
 <template>
-  <div class="card-body">
-    <page-header
-      title="Heróis"
-      subtitle="Todos os herois"
-      redirect-back="/heroes"
-    />
-    <hero-form
-      v-if="heroData && heroData.attributes"
-      :old="heroData.attributes"
-      @update="(event) => formData = event"
-    />
-    <div class="card-actions justify-center">
-      <div
-        v-if="askToConfirm"
-        class="form-control flex">
-        <label class="label cursor-pointer gap-4">
-          <span class="label-text">Não, cancelar</span>
-          <input
-            v-model="confirmDestroy"
-            type="radio"
-            name="confirm-destroy"
-            class="radio"
-            @click="cancelDestroy"
-          />
-          <span class="label-text">Sim, tenho</span>
-          <input
-            v-model="confirmDestroy"
-            type="radio"
-            name="confirm-destroy"
-            class="radio"
-          />
-        </label>
-      </div>
-      <button
+  <div class="py-5">
+    <div class="w-full flex justify-end">
+      <Button
         type="button"
-        class="btn btn-outline btn-error"
-        @click="handlerDestroy"
-      >
-        <span v-if="confirmDestroy">
-          Ok, excluir
-        </span>
-        <span v-else-if="askToConfirm">
-          Tem certeza que quer excluir?
-        </span>
-        <span v-else>
-          Excluir dos registros
-        </span>
-      </button>
-      <button
-        v-if="!askToConfirm && !confirmDestroy"
-        type="button"
-        class="btn btn-primary"
-        @click="update"
-      >
-        Salvar
-      </button>
+        label="Excluir"
+        severity="danger"
+        icon="fa fa-trash"
+        :loading="loading"
+        class="ml-auto"
+        @click="confirmDestroy = !confirmDestroy"
+      />
     </div>
+    <hero-form
+      v-if="hero"
+      :errors="errors"
+      :old="hero"
+      @update="(event) => formData = event"
+    >
+      <template #submit>
+        <Button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          icon="fa fa-arrow-left"
+          :loading="loading"
+          @click="router.go(-1)"
+        />
+        <Button
+          type="button"
+          label="Salvar"
+          icon="fa fa-check"
+          :loading="loading"
+          @click="update()"
+        />
+      </template>
+    </hero-form>
+    <confirm-modal
+      v-model="confirmDestroy"
+      cancel="Não"
+      confirm="Sim"
+      message="Quer mesmo excluir este herói? Esta ação não pode ser desfeita!"
+      title="Atenção!"
+      theme="danger"
+      @confirm="destroy"
+    />
   </div>
 </template>
-<script setup lang="ts">
+<script
+    lang="ts"
+    setup
+>
+import {ref} from 'vue';
 import HeroForm from "~/components/Heroes/HeroForm.vue";
-import PageHeader from "~/components/layout/PageHeader.vue";
+import {useHeroStore} from "~/store/hero/heroStore";
+import ConfirmModal from "~/components/layout/ConfirmModal.vue";
 
-const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
+const store = useHeroStore()
 
-const formData = ref(null)
-const heroData = ref({})
+const formData = ref({})
+const hero = ref(null)
+const loading = ref(null)
+const errors = ref({})
 const confirmDestroy = ref(false)
-const askToConfirm = ref(false)
 
-const heroId = route.params.id
-
-onMounted(async () => {
-  await $fetch(`${config.public.apiBase}heroes/${heroId}`, {
-    method: 'GET',
-    'Content-Type': 'Application/json',
-    onRequest({options}) {
-      options.headers = {
-        Authorization: `Bearer ${config.public.apiSecret}`
-      }
-    },
-    }).then((response) => {
-    heroData.value = response.data;
-  })
+await store.fetchHero(route.params.id).then(() => {
+  hero.value = store.hero
+  loading.value = store.pending
 })
 
-function update () {
-  if (formData) {
-    $fetch(`${config.public.apiBase}heroes/${heroId}`, {
-      method: 'PUT',
-      body: {data: formData.value},
-      'Content-Type': 'Application/json',
-      onRequest({options}) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-      }).then(() => {
-      router.push('/heroes')
-    })
-  }
+async function update(): Promise<void> {
+  await store.editHero(formData.value, route.params.id)
 }
 
-function handlerDestroy () {
-  askToConfirm.value = !askToConfirm.value
-  if (confirmDestroy) {
-    destroy()
-  }
-}
-
-function cancelDestroy () {
-  confirmDestroy.value = false
-  askToConfirm.value = false
-}
-
-function destroy () {
-  if (formData) {
-    $fetch(`${config.public.apiBase}heroes/${heroId}`, {
-      method: 'DELETE',
-      body: {data: formData.value},
-      'Content-Type': 'Application/json',
-      onRequest({options}) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-    }).then(() => {
-      router.push('/heroes')
-    })
-  }
+async function destroy(): Promise<void> {
+  await store.destroyHero(`${route.params.id}`)
 }
 
 </script>

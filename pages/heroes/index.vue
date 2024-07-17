@@ -1,69 +1,89 @@
 <template>
   <div class="card-body">
-    <page-header
-      title="Heróis"
-      subtitle="Todos os herois"
-      redirect-back="/home"
-    >
-      <template #end>
-        <nuxt-link
-          to="heroes/new"
-          class="btn btn-sm btn-primary"
-        >
-          <i class="fa fa-plus" />
-          Novo
-        </nuxt-link>
-      </template>
-    </page-header>
-
     <div class="flex flex-col py-2">
-      <div>
-        <!--        // barra de filtros-->
+      <div class="flex justify-between">
+        <div class="flex items-start gap-4">
+          <generic-filter
+            :availableFilters="['search', 'gender']"
+          />
+        </div>
+        <Button
+          type="button"
+          label="Novo"
+          icon="fa fa-plus"
+          @click="router.push('heroes/new')"
+        />
       </div>
-      <div>
-        <div class="">
-          <div v-if="heroes" class="grid grid-cols-2 w-full gap-4">
+      <div class="py-5">
+        <div
+          v-if="pending"
+          class="w-full flex justify-center items-center"
+        >
+          <div class="grid grid-cols-2 w-full gap-4">
+            <Skeleton
+              v-for="i in 6"
+              :key="i"
+              height="25rem"
+              width="25rem"
+            ></Skeleton>
+          </div>
+        </div>
+        <div v-else-if="heroes && heroes.length > 0">
+          <div class="grid grid-cols-2 w-full gap-4">
             <CardHeroItem
               v-for="(hero, index) in heroes"
-              :key="index"
-              :hero="hero.attributes"
               :id="hero.id"
+              :key="index"
+              :hero="hero"
             />
           </div>
-          <div v-else>
-            Nenhum Herói cadastrado
-          </div>
+        </div>
+        <div
+          v-else
+          class="flex items-center justify-center min-h-96"
+        >
+          Nenhum Herói cadastrado
+          <img
+            alt="sdjh"
+            class="w-32"
+            src="@/assets/empty-state.png"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import CardHeroItem from "~/components/Home/CardHeroItem.vue";
-import PageHeader from "~/components/layout/PageHeader.vue";
-const config = useRuntimeConfig()
+<script
+    lang="ts"
+    setup
+>
+import {ref, watch} from 'vue';
+import {useHeroStore} from '~/store/hero/heroStore';
+import {useRoute, useRouter} from 'vue-router';
+import CardHeroItem from "~/components/Heroes/CardHeroItem.vue";
+import GenericFilter from "~/components/Utils/GenericFilter.vue";
 
-const isLoading = ref(false);
-const error = ref('');
-const heroes = ref([]);
+const route = useRoute();
+const router = useRouter();
+const store = useHeroStore()
+const heroes = ref(null)
+const pending = ref(store.getLoading)
+const params: Ref<RequestParams> = ref({search: '', sex: ''})
 
-onMounted(async () => {
-  isLoading.value = true;
-  error.value = '';
-  heroes.value = null;
-    await useFetch(`${config.public.apiBase}heroes`, {
-      onRequest({ options }) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-    }).then((response) => {
-      if (response.data._value)
-        heroes.value = response.data._value.data
-    }).catch((error) => console.error(error))
-
-  isLoading.value = false;
+onBeforeMount(() => {
+  store.fetchHeroes(params.value).then((response) => {
+    heroes.value = store.getHeroes
+  })
 })
+
+watch(() => route.query, async (newQuery) => {
+  await store.fetchHeroes(newQuery);
+}, {deep: true})
+
+interface RequestParams {
+  search: null | string,
+  sex: null | string
+}
 </script>
 
 

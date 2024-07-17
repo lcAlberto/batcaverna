@@ -1,0 +1,44 @@
+<template>
+  <div class="card-body">
+    <team-form @update="(event) => formData = event"/>
+    <div class="flex justify-end gap-4 w-full mt-5">
+      <Button
+        type="button"
+        label="Cancelar"
+        severity="secondary"
+        icon="fa fa-arrow-left"
+        @click="router.go(-1)"
+      />
+      <Button
+        type="button"
+        label="Salvar"
+        icon="fa fa-check"
+        @click="submit"
+      />
+    </div>
+  </div>
+</template>
+<script
+    lang="ts"
+    setup
+>
+import TeamForm from "~/components/Teams/TeamForm.vue";
+import {useTeamStore} from "~/store/team/teamStore";
+
+const router = useRouter()
+const store = useTeamStore()
+
+const formData = ref(null)
+
+function submit() {
+  if (formData) {
+    console.log(formData.value);
+    store.newTeam(formData.value)
+  }
+}
+</script>
+
+
+<style scoped>
+
+</style>

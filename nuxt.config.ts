@@ -1,5 +1,7 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import Aura from '@primevue/themes/aura';
+
 export default defineNuxtConfig({
+  ssr: false,
   devtools: { enabled: true },
   app: {
       head: {
@@ -9,6 +11,7 @@ export default defineNuxtConfig({
           meta: [
               { charset: 'utf-8' },
               { 'data-theme': 'light' },
+              { name: 'csrf-token', content: '' }
           ]
       }
   },
@@ -20,10 +23,20 @@ export default defineNuxtConfig({
       }
     },
   modules: [
+      '@pinia/nuxt',
+      '@nuxt/eslint',
       '@nuxtjs/eslint-module',
       '@nuxtjs/tailwindcss',
+      '@vueuse/nuxt',
+      '@primevue/nuxt-module'
   ],
+  primevue: {
+    options: {
+        theme: {
+            preset: Aura
+          }
+      }
+  },
     plugins: [
-        // '~/plugins/apiClient.ts',
     ],
 })
