@@ -30,6 +30,15 @@
         @click="update"
       />
     </div>
+    <confirm-modal
+      v-model="confirmDestroy"
+      cancel="Não"
+      confirm="Sim"
+      message="Quer mesmo excluir esta equipe? Esta ação não pode ser desfeita!"
+      title="Atenção!"
+      theme="danger"
+      @confirm="destroy"
+    />
   </div>
 </template>
 <script
@@ -37,73 +46,33 @@
     lang="ts"
 >
 import TeamForm from "~/components/Teams/TeamForm.vue";
+import {useTeamStore} from "~/store/team/teamStore";
+import ConfirmModal from "~/components/layout/ConfirmModal.vue";
 
-const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
 
 const formData = ref(null)
-const teamData = ref({})
+const teamData = ref(null)
 const confirmDestroy = ref(false)
-const askToConfirm = ref(false)
+const store = useTeamStore()
 
-const {params} = route
-
-const {pending} = useFetch(`${config.public.apiBase}teams/${params.id}`, {
-  method: 'GET',
-  'Content-Type': 'Application/json',
-  onRequest({options}) {
-    options.headers = {
-      Authorization: `Bearer ${config.public.apiSecret}`
-    }
-  },
-}).then((response) => {
-  teamData.value = response.data;
+onMounted(async () => {
+  await store.fetchTeam(`${route.params.id}`)
+      .then(() => {
+        teamData.value = store.getTeam
+      })
 })
 
 function update() {
   if (formData.value) {
-    $fetch(`${config.public.apiBase}teams/${params.id}`, {
-      method: 'PUT',
-      body: formData.value,
-      'Content-Type': 'Application/json',
-      onRequest({options}) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-    }).then(() => {
-      router.push('/teams')
-    })
+    store.editTeam(formData.value, route.params.id)
   }
-}
-
-function handlerDestroy() {
-  askToConfirm.value = !askToConfirm.value
-  if (confirmDestroy) {
-    destroy()
-  }
-}
-
-function cancelDestroy() {
-  confirmDestroy.value = false
-  askToConfirm.value = false
 }
 
 function destroy() {
   if (formData) {
-    $fetch(`${config.public.apiBase}teams/${teamId}`, {
-      method: 'DELETE',
-      body: {data: formData.value},
-      'Content-Type': 'Application/json',
-      onRequest({options}) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-    }).then(() => {
-      router.push('/teams')
-    })
+    store.destroyTeam(`${route.params.id}`)
   }
 }
 

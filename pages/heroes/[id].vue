@@ -1,6 +1,6 @@
 <template>
   <div class="py-5">
-    <div class="w-full">
+    <div class="w-full flex justify-end">
       <Button
         type="button"
         label="Excluir"
@@ -41,6 +41,7 @@
       confirm="Sim"
       message="Quer mesmo excluir este herói? Esta ação não pode ser desfeita!"
       title="Atenção!"
+      theme="danger"
       @confirm="destroy"
     />
   </div>
@@ -74,7 +75,7 @@ async function update(): Promise<void> {
 }
 
 async function destroy(): Promise<void> {
-  await store.destroyHero(route.params.id)
+  await store.destroyHero(`${route.params.id}`)
 }
 
 </script>

@@ -11,11 +11,11 @@
       </div>
       <div class="py-5">
         <div
-          v-if="data.teams.data"
+          v-if="teams"
           class="grid grid-cols-2 w-full gap-4"
         >
           <team-item
-            v-for="(team, index) in data.teams.data"
+            v-for="(team, index) in teams"
             :key="index"
             :id="team.id"
             :team="team"
@@ -25,7 +25,7 @@
           v-else
           class="flex items-center justify-center min-h-96"
         >
-          Nenhum Herói cadastrado
+          Nenhuma equipe cadastrada
           <img
             alt="sdjh"
             class="w-32"
@@ -41,19 +41,15 @@
     lang="ts"
 >
 import TeamItem from "~/components/Teams/TeamItem.vue";
-import {useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
+import {useTeamStore} from "~/store/team/teamStore";
 
-const route = useRoute();
 const router = useRouter();
-const config = useRuntimeConfig()
+const store = useTeamStore();
 
-const {data} = await useFetch(`${config.public.apiBase}teams`, {
-  onRequest({options}) {
-    options.headers = {
-      Authorization: `Bearer ${config.public.apiSecret}`
-    }
-  }
-})
+const teams = ref(null)
+
+onMounted(async () => await store.fetchTeams().then(() => teams.value = store.getTeams))
 </script>
 
 
