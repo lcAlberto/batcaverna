@@ -23,26 +23,17 @@
     setup
 >
 import TeamForm from "~/components/Teams/TeamForm.vue";
+import {useTeamStore} from "~/store/team/teamStore";
 
-const config = useRuntimeConfig()
 const router = useRouter()
+const store = useTeamStore()
 
 const formData = ref(null)
 
 function submit() {
   if (formData) {
-    $fetch(`${config.public.apiBase}teams/`, {
-      method: 'POST',
-      body: formData.value,
-      'Content-Type': 'Application/json',
-      onRequest({options}) {
-        options.headers = {
-          Authorization: `Bearer ${config.public.apiSecret}`
-        }
-      },
-    }).then(() => {
-      router.push('/teams')
-    })
+    console.log(formData.value);
+    store.newTeam(formData.value)
   }
 }
 </script>

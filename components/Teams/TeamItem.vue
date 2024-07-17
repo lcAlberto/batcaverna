@@ -5,7 +5,7 @@
         <img
           v-if="props.team?.image"
           :src="props.team.image"
-          alt="Shoes"
+          alt="tea-image"
           class="w-full h-max-52"
         />
         <img
@@ -40,18 +40,6 @@
       </div>
     </template>
   </Card>
-  <div
-    v-if="team"
-    class="card card-compact bg-base-100 shadow-xl"
-  >
-    <figure class="max-h-52">
-      <img
-        :src="`${team.image}`"
-        alt="Shoes"
-        class="w-full"
-      />
-    </figure>
-  </div>
 </template>
 <script
     lang="ts"

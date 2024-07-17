@@ -1,59 +1,85 @@
-<template >
-  <!-- Open the modal using ID.showModal() method -->
-  <dialog ref="confirmModal" class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box  border border-error">
-      <h3 class="font-bold text-2xl text-error">
-        <i class="fa fa-exclamation fa-bounce"></i>
-        {{ props.title }}!
-      </h3>
-      <p class="py-4">{{ props.message }}</p>
-      <div class="modal-action">
-        <form class="w-1/2 flex gap-3" method="dialog">
-          <!-- if there is a button in form, it will close the modal -->
-          <button
-            class="btn w-1/2"
-            @click="confirmModal.value.close()"
-          >
-            <i class="fa fa-ban"></i>
-            {{ props.cancel }}
-          </button>
-          <button
-            class="btn btn-error w-1/2"
-            @click="emits('confirm')"
-          >
-            <i class="fa fa-check"></i>
-            {{ props.confirm }}
-          </button>
-        </form>
+<template>
+  <ConfirmDialog>
+    <template #container="{ message, acceptCallback, rejectCallback }">
+      <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded mt-10">
+        <div
+          class="rounded-full text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20"
+          :class="{'bg-primary': theme === 'primary', 'bg-red-500': theme === 'danger'}"
+        >
+          <i :class="`${props.icon} text-5xl`"></i>
+        </div>
+        <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+        <p class="mb-0">{{ message.message }}</p>
+        <div class="flex items-center gap-2 mt-6">
+          <Button
+            :label="props.confirm"
+            @click="acceptCallback"
+            :severity="theme"
+            class="w-32"
+          ></Button>
+          <Button
+            :label="props.cancel"
+            outlined
+            :severity="theme"
+            @click="rejectCallback"
+            class="w-32"
+          ></Button>
+        </div>
       </div>
-    </div>
-  </dialog>
-</template >
-<script lang="ts" setup>
+    </template>
+  </ConfirmDialog>
+</template>
+<script
+    lang="ts"
+    setup
+>
+import {useConfirm} from "primevue/useconfirm";
 
 const props = defineProps({
-  modelValue: { type: Boolean, required: true },
-  title: { type: String, required: true },
-  message: { type: String, required: true },
-  confirm: { type: String, default: 'Ok' },
-  cancel: { type: String, default: 'Cancelar'}
+  modelValue: {type: Boolean, required: true},
+  title: {type: String, required: true},
+  message: {type: String, required: true},
+  confirm: {type: String, default: 'Ok'},
+  cancel: {type: String, default: 'Cancelar'},
+  icon: {type: String, default: 'fa fa-trash'},
+  theme: {type: String, default: 'primary'}
 })
-
 const emits = defineEmits(['update:modelValue', 'confirm']);
-const confirmModal = ref(null);
+const confirm = useConfirm();
+
+const confirm2 = () => {
+  confirm.require({
+    message: props.message,
+    header: props.title,
+    icon: props.icon,
+    position: 'top',
+    rejectLabel: props.cancel,
+    rejectProps: {
+      label: props.cancel,
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: props.confirm,
+      severity: props.theme
+    },
+    accept: () => {
+      emits('confirm')
+    },
+    reject: () => {
+      //
+    }
+  });
+};
 
 watch(() => props.modelValue, (val) => {
-  if (confirmModal.value) {
-    if (val) {
-      confirmModal.value.showModal();
-    } else {
-      confirmModal.value.close();
-    }
-  }
-});
-</script >
+  if (val)
+    confirm2()
+})
+
+</script>
 
 
 <style scoped>
 
-</style >
+</style>
