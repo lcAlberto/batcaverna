@@ -16,7 +16,7 @@
           <avatar-upload
             :current-image="formData.image"
             :errors="errors?.image"
-            class="flex justify-center w-full"
+            class="flex justify-center w-full mb-3"
             @update="(event) => updateImage(event)"
           />
           <div class="py-4">
@@ -53,7 +53,7 @@
 
           <div class="py-4">
             <FloatLabel>
-              <InputNumber
+              <InputText
                 id="age"
                 v-model="formData.age"
                 :invalid="errors?.age"
@@ -200,6 +200,7 @@
                     display="chip"
                     optionLabel="name"
                     optionValue="id"
+                    dataKey="id"
                     placeholder="Habilidades"
                     :maxSelectedLabels="10"
                     class="w-full"
@@ -250,6 +251,7 @@
                     display="chip"
                     optionLabel="name"
                     optionValue="id"
+                    dataKey="id"
                     placeholder="Fraquezas"
                     :maxSelectedLabels="5"
                     class="w-full"
@@ -345,7 +347,7 @@ const {data: teams, pending} = await useFetch(`${config.public.apiBase}teams`, {
 })
 
 function updateImage(payload: object) {
-  formData.value.image = payload
+  formData.value.avatar = payload
 }
 
 const colorWithHash = computed({
