@@ -71,7 +71,7 @@ export const actions = {
         }
     },
 
-    async editTeam(params: object, team_id: number) {
+    async editTeam(params: object, team_id: string) {
         const config = useRuntimeConfig();
         const uiStore = useUiStore();
         const router = useRouter();

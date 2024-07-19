@@ -36,6 +36,7 @@ export const actions = {
         const config = useRuntimeConfig();
         const uiStore = useUiStore();
         const router = useRouter();
+        console.log(params);
 
         try {
             await $fetch(`${config.public.apiBase}characters`, {
@@ -72,7 +73,8 @@ export const actions = {
         }
     },
 
-    async editHero(params: object, hero_id: number) {
+    async editHero(params: object, hero_id: string) {
+        console.log(params);
         const config = useRuntimeConfig();
         const uiStore = useUiStore();
         const router = useRouter();

@@ -66,7 +66,7 @@ onMounted(async () => {
 
 function update() {
   if (formData.value) {
-    store.editTeam(formData.value, route.params.id)
+    store.editTeam(formData.value, `${route.params.id}`)
   }
 }
 
