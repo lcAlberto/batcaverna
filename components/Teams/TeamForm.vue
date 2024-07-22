@@ -13,7 +13,8 @@
           </div>
         </template>
         <avatar-upload
-          :current-image="formData.image"
+          :current-image="formData.avatar"
+          :errors="errors?.avatar"
           class="w-full justify-end"
           @update="(event) => updateImage(event)"
         />
@@ -124,7 +125,7 @@ const heroes = ref(null)
 const errors = ref(null)
 const formData = ref({
   name: '',
-  image: '',
+  avatar: '',
   location: '',
   founded_date: '',
   heroes: [],
@@ -138,7 +139,7 @@ onMounted(async () => {
 })
 
 function updateImage(payload: object) {
-  formData.value.image = payload
+  formData.value.avatar = payload
   emit('update', formData)
 }
 

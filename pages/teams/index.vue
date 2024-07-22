@@ -11,8 +11,21 @@
       </div>
       <div class="py-5">
         <div
-          v-if="teams"
-          class="grid grid-cols-2 w-full gap-4"
+          v-if="pending"
+          class="w-full flex justify-center items-center"
+        >
+          <div class="grid grid-cols-3 w-full gap-4">
+            <Skeleton
+              v-for="i in 6"
+              :key="i"
+              height="25rem"
+              width="25rem"
+            ></Skeleton>
+          </div>
+        </div>
+        <div
+          v-else-if="teams"
+          class="grid lg:grid-cols-3 w-full gap-4"
         >
           <team-item
             v-for="(team, index) in teams"
@@ -48,8 +61,12 @@ const router = useRouter();
 const store = useTeamStore();
 
 const teams = ref(null)
+const pending = ref(true)
 
-onMounted(async () => await store.fetchTeams().then(() => teams.value = store.getTeams))
+onMounted(async () => await store.fetchTeams().then(() => {
+  teams.value = store.getTeams
+  pending.value = store.getLoading
+}))
 </script>
 
 

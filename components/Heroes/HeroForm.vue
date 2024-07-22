@@ -14,8 +14,8 @@
         </template>
         <div class="p-4 w-full">
           <avatar-upload
-            :current-image="formData.image"
-            :errors="errors?.image"
+            :current-image="formData.avatar"
+            :errors="errors?.avatar"
             class="flex justify-center w-full mb-3"
             @update="(event) => updateImage(event)"
           />
@@ -107,7 +107,7 @@
                   <label
                     for="affiliate"
                     class="font-bold block mb-2"
-                  > Afiliado</label>
+                  > Afiliado, mentor, mestre</label>
                   <InputText
                     v-model="formData.affiliate"
                     inputId="affiliate"
@@ -124,9 +124,28 @@
               <div class="py-3">
                 <div class="flex-auto">
                   <label
+                    for="affiliate"
+                    class="font-bold block mb-2"
+                  >Par, companheiro, interesse romântico</label>
+                  <InputText
+                    v-model="formData.pair"
+                    inputId="affiliate"
+                    :invalid="errors?.pair"
+                    fluid
+                  />
+                </div>
+                <span
+                  v-if="errors?.pair"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.pair[0] }}</span>
+              </div>
+
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
                     for="city"
                     class="font-bold block mb-2"
-                  > Cidade</label>
+                  > Cidade, província ou nação</label>
                   <InputText
                     v-model="formData.city"
                     inputId="affiliate"
@@ -189,6 +208,31 @@
               <div class="py-3">
                 <div class="flex-auto">
                   <label
+                    for="sex"
+                    class="font-bold block mb-2"
+                  > Gênero biológico
+                  </label>
+                  <Select
+                    v-model="formData.sex"
+                    :options="genders"
+                    :loading="pending"
+                    :invalid="errors?.sex"
+                    optionLabel="label"
+                    optionValue="value"
+                    labelId="value"
+                    placeholder="Selecione um sexo biológico para qual o herói ou criatura pertence"
+                    class="w-full"
+                  />
+                </div>
+                <span
+                  v-if="errors?.sex"
+                  class="label-text-alt text-red-500"
+                >{{ errors?.sex[0] }}</span>
+              </div>
+
+              <div class="py-3">
+                <div class="flex-auto">
+                  <label
                     for="skills"
                     class="font-bold block mb-2"
                   > Habilidades, poderes ou pontos fortes</label>
@@ -215,31 +259,6 @@
               <div class="py-3">
                 <div class="flex-auto">
                   <label
-                    for="sex"
-                    class="font-bold block mb-2"
-                  > Gênero biológico
-                  </label>
-                  <Select
-                    v-model="formData.sex"
-                    :options="genders"
-                    :loading="pending"
-                    :invalid="errors?.sex"
-                    optionLabel="label"
-                    optionValue="value"
-                    labelId="value"
-                    placeholder="Selecione um sexo biológico para qual o herói ou criatura pertence"
-                    class="w-full"
-                  />
-                </div>
-                <span
-                  v-if="errors?.sex"
-                  class="label-text-alt text-red-500"
-                >{{ errors?.sex[0] }}</span>
-              </div>
-
-              <div class="py-3">
-                <div class="flex-auto">
-                  <label
                     for="weakness"
                     class="font-bold block mb-2"
                   > Fraquezas ou pontos fracos</label>
@@ -253,7 +272,7 @@
                     optionValue="id"
                     dataKey="id"
                     placeholder="Fraquezas"
-                    :maxSelectedLabels="5"
+                    :maxSelectedLabels="10"
                     class="w-full"
                   />
                 </div>
@@ -277,6 +296,7 @@
     setup
 >
 import {useSkillStore} from "~/store/skill/skillStore";
+import {useWeaknessStore} from "~/store/weakness/weaknessStore";
 import AvatarUpload from "~/components/Heroes/AvatarUpload.vue";
 
 const emit = defineEmits(['update'])
@@ -288,18 +308,14 @@ const prop = defineProps({
 
 const skillStore = useSkillStore()
 const skills = ref([])
-
+const weaknessStore = useWeaknessStore()
+const weakness = ref([])
 
 const config = useRuntimeConfig()
 const genders = [
   {value: 'male', label: 'Masculino'},
   {value: 'female', label: 'Feminino'},
   {value: 'other', label: 'Outro'},
-]
-const weakness = [
-  {id: 1, name: 'Kriptonita'},
-  {id: 2, name: 'Emocional'},
-  {id: 3, name: 'Outro'},
 ]
 const formData = ref({
   name: '',
@@ -320,15 +336,19 @@ const formData = ref({
 
 onMounted(() => {
   skillStore.fetchSkills()
+  weaknessStore.fetchWeakness()
   if (prop.old) {
     formData.value = prop.old
-    if (typeof prop.old.weakness !== 'object')
-      formData.value.weakness = [prop.old.weakness]
+    formData.value.weakness = formData.value.weakness.map(weakness => weakness.id)
+    formData.value.skills = formData.value.skills.map(skill => skill.id)
   }
 })
 
 watch(() => skillStore.getSkills, (newSkills) => {
   skills.value = newSkills
+});
+watch(() => weaknessStore.getWeakness, (newWeakness) => {
+  weakness.value = newWeakness
 });
 watch(() => formData.value, (form) => {
   emit('update', form)

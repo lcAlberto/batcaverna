@@ -1,10 +1,10 @@
 import {useUiStore} from '@/store/ui/uiStore'
 
-const uiStore = useUiStore()
-const config = useRuntimeConfig()
 
 export const actions = {
     fetchWeakness: async function (params: object | null) {
+        const uiStore = useUiStore()
+        const config = useRuntimeConfig()
         try {
             const {data, pending, error} = await useFetch(`${config.public.apiBase}weakness`, {
                 onRequest({options}) {
@@ -13,7 +13,7 @@ export const actions = {
                 },
             })
             this.loading = pending;
-            this.skills = data.value.data.data;
+            this.weakness = data.value.data.data;
             this.errors.value = error;
             const { current_page, last_page, total } = data.value;
             this.pagination = {
@@ -27,9 +27,11 @@ export const actions = {
         }
     },
 
-    newSkill: async function(params: object) {
+    newWeakness: async function (params: object) {
+        const uiStore = useUiStore()
+        const config = useRuntimeConfig()
         try {
-            await $fetch(`${config.public.apiBase}skill`, {
+            await $fetch(`${config.public.apiBase}weakness`, {
                 method: 'POST',
                 body: params,
                 'Content-Type': 'Application/json',

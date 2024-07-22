@@ -16,9 +16,11 @@
 ## O sistema usado pelo Batman e pela Liga da Justiça em suas missões!
 
 Gerencie seus heróis em missão de maneira organizada, Acompanhe seus squads em frentes de batalha.<br>
-<img src="./endpoints/create hero.png" style="width: 50%">
+<img src="./endpoints/create hero.png" style="width: 40%">
+<img src="./endpoints/heroes.png" style="width: 40%">
 <br>
-O projeto ainda está em desenvolvimento, então se sinta a vontade para criar uma issue, um fork ou pull request.
+O projeto ainda está em desenvolvimento, então se sinta a vontade para criar uma issue reportar um bug, um fork ou pull
+request.
 
 ## API
 
