@@ -3,8 +3,8 @@
     <template #header>
       <figure class="h-52 overflow-hidden">
         <img
-          v-if="props.team?.image"
-          :src="props.team.image"
+          v-if="props.team?.avatar"
+          :src="props.team.avatar"
           alt="tea-image"
           class="w-full h-max-52"
         />

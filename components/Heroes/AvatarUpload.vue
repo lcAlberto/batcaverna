@@ -36,15 +36,21 @@
     >
       <FileUpload
         name="demo"
-        mode="advanced"
         @upload="handleUpload"
         :multiple="false"
         accept="image/*"
         auto
+        :show-cancel-button="false"
+        :show-upload-button="false"
         :maxFileSize="1000000"
+        invalid-file-size-message="Arquivo muito grande!"
+        invalid-file-limit-message="Só é permitido um arquivo!"
+        @error="console.log('erroooo')"
       >
         <template #empty>
-          <span>Drag and drop files to here to upload.</span>
+          <div class="h-52 flex items-center justify-center">
+            <span>Drag and drop files to here to upload.</span>
+          </div>
         </template>
       </FileUpload>
     </Dialog>
@@ -69,7 +75,6 @@ const props = defineProps({
 })
 
 const imgBlob = ref('')
-const fileData = ref(null)
 const visible = ref(false)
 
 function handleUpload(payload: object) {
@@ -82,9 +87,7 @@ function handleUpload(payload: object) {
 async function handleBlobUrl(blobUrl: string) {
   try {
     const blob = await fetchBlobFromURL(blobUrl);
-    console.log('blob', blob);
-    const base64 = await blobToBase64(blob);
-    console.log('base64', base64);
+    await blobToBase64(blob);
   } catch (error) {
     console.error('Erro ao converter blob URL para base64:', error);
   }
@@ -107,35 +110,6 @@ function blobToBase64(blob: Blob): Promise<string> {
     reader.readAsDataURL(blob);
   });
 }
-
-
-// async function handleBlobUrl(blobUrl: string) {
-//   try {
-//     const blob = await fetchBlobFromURL(blobUrl);
-//     console.log('aqui oo arquivo', blob);
-//     imgBlob.value = await blobToBase64(blob);
-//     // emit('update', imgBlob.value)
-//   } catch (error) {
-//     console.error('Erro ao converter blob URL para base64:', error);
-//   }
-// }
-//
-// function blobToBase64(blob: Blob): Promise<string> {
-//   return new Promise((resolve, reject) => {
-//     const reader = new FileReader();
-//     reader.onloadend = () => {
-//       let base64data = reader.result.replace(/^data:image\/[a-z]+;base64,/, "");
-//       resolve(`data:image/png;base64,${base64data}`);
-//     };
-//     reader.onerror = reject;
-//     reader.readAsDataURL(blob);
-//   });
-// }
-//
-// async function fetchBlobFromURL(blobUrl: string): Promise<Blob> {
-//   const response = await fetch(blobUrl);
-//   return await response.blob();
-// }
 
 </script>
 

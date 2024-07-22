@@ -19,7 +19,7 @@
           v-if="pending"
           class="w-full flex justify-center items-center"
         >
-          <div class="grid grid-cols-2 w-full gap-4">
+          <div class="grid lg:grid-cols-3 w-full gap-4">
             <Skeleton
               v-for="i in 6"
               :key="i"
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div v-else-if="heroes && heroes.length > 0">
-          <div class="grid grid-cols-2 w-full gap-4">
+          <div class="grid lg:grid-cols-3 w-full gap-4">
             <CardHeroItem
               v-for="(hero, index) in heroes"
               :id="hero.id"
@@ -71,7 +71,7 @@ const pending = ref(store.getLoading)
 const params: Ref<RequestParams> = ref({search: '', sex: ''})
 
 onBeforeMount(() => {
-  store.fetchHeroes(params.value).then((response) => {
+  store.fetchHeroes(params.value).then(() => {
     heroes.value = store.getHeroes
   })
 })
