@@ -86,7 +86,7 @@
                   :options="heroes"
                   :invalid="errors?.heroes"
                   label="Fraquezas ou pontos fracos"
-                  id="weakness"
+                  id="heroes"
                   display="chip"
                   optionLabel="name"
                   optionValue="id"

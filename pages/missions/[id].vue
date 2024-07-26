@@ -10,11 +10,7 @@
         @click="confirmDestroy = !confirmDestroy"
       />
     </div>
-    <team-form
-      v-if="teamData"
-      :old="teamData"
-      @update="(event) => formData = event"
-    />
+    <missions-mission-step-form/>
     <div class="flex justify-end gap-4 w-full mt-5">
       <Button
         type="button"
@@ -34,7 +30,7 @@
       v-model="confirmDestroy"
       cancel="Não"
       confirm="Sim"
-      message="Quer mesmo excluir esta equipe? Esta ação não pode ser desfeita!"
+      message="Quer mesmo excluir esta missão? Esta ação não pode ser desfeita!"
       title="Atenção!"
       theme="danger"
       @confirm="destroy"
@@ -45,35 +41,18 @@
     setup
     lang="ts"
 >
-import TeamForm from "~/components/Teams/TeamForm.vue";
-import {useTeamStore} from "~/store/team/teamStore";
 import ConfirmModal from "~/components/Ui/ConfirmModal.vue";
+import {useMissionStore} from "~/store/mission/missionStore";
 
 const route = useRoute()
 const router = useRouter()
 
-const formData = ref(null)
-const teamData = ref(null)
 const confirmDestroy = ref(false)
-const store = useTeamStore()
+const store = useMissionStore()
 
-onMounted(async () => {
-  await store.fetchTeam(`${route.params.id}`)
-      .then(() => {
-        teamData.value = store.getTeam
-      })
-})
-
-function update() {
-  if (formData.value) {
-    store.editTeam(formData.value, `${route.params.id}`)
-  }
-}
 
 function destroy() {
-  if (formData) {
-    store.destroyTeam(`${route.params.id}`)
-  }
+  store.destroyMission(`${route.params.id}`)
 }
 
 </script>

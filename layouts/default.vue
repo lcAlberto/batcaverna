@@ -21,9 +21,9 @@
     setup
 >
 
-import Navbar from "~/components/layout/Navbar.vue";
-import Sidebar from "~/components/layout/Sidebar.vue";
-import Breadcrumb from "~/components/layout/Breadcrumb.vue";
+import Navbar from "~/components/Ui/Navbar.vue";
+import Sidebar from "~/components/Ui/Sidebar.vue";
+import Breadcrumb from "~/components/Ui/Breadcrumb.vue";
 import {useToast} from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 import {useUiStore} from '~/store/ui/uiStore';

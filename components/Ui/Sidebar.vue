@@ -83,6 +83,11 @@ const list = ref([
     label: 'Equipes'
   },
   {
+    path: '/missions',
+    icon: 'fa fa-medal',
+    label: 'Missões'
+  },
+  {
     path: '/#younglings',//'/younglings',
     icon: 'fa fa-graduation-cap',
     label: 'Recrutas',

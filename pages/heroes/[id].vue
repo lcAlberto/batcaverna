@@ -53,7 +53,7 @@
 import {ref} from 'vue';
 import HeroForm from "~/components/Heroes/HeroForm.vue";
 import {useHeroStore} from "~/store/hero/heroStore";
-import ConfirmModal from "~/components/layout/ConfirmModal.vue";
+import ConfirmModal from "~/components/Ui/ConfirmModal.vue";
 
 const route = useRoute()
 const router = useRouter()
