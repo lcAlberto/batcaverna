@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import {useRoute} from 'vue-router';
 import Breadcrumb from 'primevue/breadcrumb';
-import PageHeader from "~/components/layout/PageHeader.vue";
+import PageHeader from "~/components/Ui/PageHeader.vue";
 
 const items = ref([]);
 const route = useRoute();

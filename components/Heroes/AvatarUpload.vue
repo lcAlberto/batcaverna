@@ -65,7 +65,7 @@
     lang="ts"
     setup
 >
-import DropzoneUpload from "~/components/layout/forms/dropzone-upload.vue";
+import DropzoneUpload from "~/components/Ui/forms/dropzone-upload.vue";
 import {useUiStore} from "~/store/ui/uiStore";
 
 const emit = defineEmits(['update'])

@@ -41,7 +41,7 @@
           </div>
           <ProgressBar
             :value="totalSizePercent"
-            :showValue
+            :show-value
             class="md:w-20rem h-1 w-full md:ml-auto"
           >
             <span class="whitespace-nowrap">{{ totalSize }}B / 1Mb</span>
